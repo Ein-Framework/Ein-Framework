@@ -30,6 +30,7 @@ func CreateDefaultConfig() *Config {
 
 	return &Config{
 		PluginsDir:     filepath.Join(home, "/.ein-framework/plugins"),
+		TemplatesDir:   filepath.Join(home, "/.ein-framework/templates"),
 		ClientPort:     9001,
 		ServerHTTPPort: 8081,
 		ServergRPCPort: 9002,

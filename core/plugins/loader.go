@@ -16,7 +16,6 @@ import (
 type LoadedPluginInfo struct {
 	Plugin  IPlugin
 	Channel chan *any
-	Active  bool
 }
 
 type IPluginManager interface {
