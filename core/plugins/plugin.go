@@ -5,24 +5,28 @@ import (
 	"github.com/Ein-Framework/Ein-Framework/core/domain/entity"
 )
 
+type PluginType int
+
 // Scanner: Scan for a vulnerability/exploit
 // ChangeDetector: Watch for a change detection
 const (
-	Scanner        int = 0
-	ChangeDetector int = 1
+	UnknownType PluginType = iota + 1
+	Scanner
+	ChangeDetector
+	UndefinedType
 )
 
 // Metadata Type describes the metadata of the plugin
 // Version is the current version of the plugin
 type Metadata struct {
-	Version     string   `json:"version"`
-	Author      string   `json:"author"`
-	Tags        []string `json:"tags"`
-	ReleaseDate string   `json:"releaseDate"`
-	Type        int      `json:"type"`
-	Protocol    string   `json:"protocol"`
-	SourceLink  string   `json:"sourceLink"`
-	Description string   `json:"description"`
+	Version     string     `json:"version"`
+	Author      string     `json:"author"`
+	Tags        []string   `json:"tags"`
+	ReleaseDate string     `json:"releaseDate"`
+	Type        PluginType `json:"type"`
+	Protocol    string     `json:"protocol"`
+	SourceLink  string     `json:"sourceLink"`
+	Description string     `json:"description"`
 }
 
 // PluginInfo ReturnType returns the type of returned data, so we can parse it

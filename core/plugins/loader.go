@@ -16,6 +16,7 @@ import (
 type LoadedPluginInfo struct {
 	Plugin  IPlugin
 	Channel chan *any
+	Active  bool
 }
 
 type IPluginManager interface {
@@ -170,15 +171,17 @@ func (manager PluginManager) LoadAllPlugins() ([]*LoadedPluginInfo, error) {
 		return nil, err
 	}
 
+	err = nil
 	for idx := range files {
 		file := files[idx]
 
 		loadedPlugin, err := manager.LoadPlugin(file)
 		if err != nil {
-			return plugins, err
+			fmt.Println("[!] Error loading plugin: ", file)
+			continue
 		}
 
 		plugins = append(plugins, loadedPlugin)
 	}
-	return plugins, nil
+	return plugins, err
 }

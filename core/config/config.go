@@ -6,13 +6,14 @@ import (
 )
 
 const (
-	defaultDir  = ".c2-chopper"
+	defaultDir  = ".ein-framework"
 	defaultFile = "config.yaml"
-	defaultPath = ".c2-chopper/config.yaml"
+	defaultPath = ".ein-framework/config.yaml"
 )
 
 type Config struct {
 	PluginsDir     string `yaml:"plugins_path"`
+	TemplatesDir   string `yaml:"plugins_path"`
 	ClientPort     int    `yaml:"client_port"`
 	ServergRPCPort int    `yaml:"server_port"`
 	ServerHTTPPort int    `yaml:"server_http_port"`
@@ -28,7 +29,7 @@ func CreateDefaultConfig() *Config {
 	home, _ := os.UserHomeDir()
 
 	return &Config{
-		PluginsDir:     filepath.Join(home, "/.c2-chopper/plugins"),
+		PluginsDir:     filepath.Join(home, "/.ein-framework/plugins"),
 		ClientPort:     9001,
 		ServerHTTPPort: 8081,
 		ServergRPCPort: 9002,

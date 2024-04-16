@@ -5,8 +5,8 @@ import (
 	"log"
 )
 
-func checkPluginType(pluginType int) {
-	if pluginType < Scanner || pluginType > ChangeDetector {
+func checkPluginType(pluginType PluginType) {
+	if pluginType <= UndefinedType || pluginType >= UndefinedType {
 		pParseError("Invalid Login Type")
 	}
 }
