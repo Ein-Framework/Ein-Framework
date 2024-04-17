@@ -13,7 +13,7 @@ const (
 
 type Config struct {
 	PluginsDir     string `yaml:"plugins_path"`
-	TemplatesDir   string `yaml:"plugins_path"`
+	TemplatesDir   string `yaml:"template_path"`
 	ClientPort     int    `yaml:"client_port"`
 	ServergRPCPort int    `yaml:"server_port"`
 	ServerHTTPPort int    `yaml:"server_http_port"`

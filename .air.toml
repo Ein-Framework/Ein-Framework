@@ -3,11 +3,11 @@ root = "."
 tmp_dir = "tmp"
 
 [build]
-cmd = "go build -o ./tmp/main ."
+cmd = "go build -o ./tmp/main ./cmd/ein.go"
 bin = "tmp/main"
 full_bin = "tmp/main"
 log = "tmp/air.log"
-delay = 1000 # ms
+delay = 1000                                # ms
 stop_signal = "SIGTERM"
 
 [log]
