@@ -7,12 +7,13 @@ import (
 
 type PluginType int
 
-// Scanner: Scan for a vulnerability/exploit
-// ChangeDetector: Watch for a change detection
+// To add a new type, make sure it's between `UnknownType` & `UndefinedType` (Used for validation)
+// `UnknownType` must always be 0, which is a default value for int type.
 const (
-	UnknownType PluginType = iota + 1
-	Scanner
-	ChangeDetector
+	UnknownType    PluginType = iota
+	Recon                     // Enumeration phase
+	Exploiter                 // Scan for a vulnerability/exploit
+	ChangeDetector            // Watch for a change detection
 	UndefinedType
 )
 
@@ -24,7 +25,6 @@ type Metadata struct {
 	Tags        []string   `json:"tags"`
 	ReleaseDate string     `json:"releaseDate"`
 	Type        PluginType `json:"type"`
-	Protocol    string     `json:"protocol"`
 	SourceLink  string     `json:"sourceLink"`
 	Description string     `json:"description"`
 }
@@ -34,6 +34,7 @@ type Metadata struct {
 type PluginInfo struct {
 	Name       string            `json:"name"`
 	Options    map[string]string `json:"options"`
+	Protocol   string            `json:"protocol"`
 	ReturnType string            `json:"returnType"`
 }
 

@@ -2,17 +2,18 @@ package main
 
 import (
 	"log"
+	"os"
 
+	"github.com/Ein-Framework/Ein-Framework/core"
 	"github.com/Ein-Framework/Ein-Framework/core/config"
-	"github.com/Ein-Framework/Ein-Framework/core/plugins"
 )
 
 func main() {
-	cfg, err := config.GetConfig()
-	if err != nil {
-		log.Panicln("Error: loading config", err)
-	}
+	configCommands := config.GetCommands()
 
-	pluginManager := plugins.CreatePluginManager(cfg)
-	pluginManager.LoadAllPlugins()
+	app := core.CreateApp(configCommands)
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Panicln("Error occurred while launching the framework", err)
+	}
 }
