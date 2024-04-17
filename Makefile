@@ -8,7 +8,7 @@ install:
 
 .PHONY: run
 run:
-	air
+	air -c server.air.toml
 
 .PHONY: clean
 clean:
