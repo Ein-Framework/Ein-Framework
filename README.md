@@ -2,6 +2,12 @@
 
 - Go version: Go 1.22.1
 
+- Install env
+
+```shell
+make install
+```
+
 - Build binary
 
 ```shell
