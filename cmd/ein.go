@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/Ein-Framework/Ein-Framework/core"
-	"github.com/Ein-Framework/Ein-Framework/core/config"
+	"github.com/Ein-Framework/Ein-Framework/pkg/config"
 	"github.com/Ein-Framework/Ein-Framework/server"
 )
 

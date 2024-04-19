@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path"
 	"path/filepath"
 	"plugin"
 	"strings"
 
-	Cfg "github.com/Ein-Framework/Ein-Framework/core/config"
+	Cfg "github.com/Ein-Framework/Ein-Framework/pkg/config"
 )
 
 type LoadedPluginInfo struct {
@@ -69,13 +68,7 @@ func (manager PluginManager) ListAllPlugins() ([]string, error) {
 		plugins []string
 	)
 
-	homedir, err := os.UserHomeDir()
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Println(path.Join(homedir, manager.config.PluginsDir))
-	files, err := os.ReadDir(path.Join(homedir, manager.config.PluginsDir))
+	files, err := os.ReadDir(manager.config.PluginsDir)
 	if err != nil {
 		// log.Panicln("Error: Cannot load plugins, No directory found.", err)
 		return nil, err
@@ -112,25 +105,13 @@ func (manager PluginManager) LoadPlugin(filePath string) (*LoadedPluginInfo, err
 		return loadedPlugin, nil
 	}
 
-	homedir, err := os.UserHomeDir()
-	if err != nil {
-		return nil, err
-	}
-
-	fullPath := filepath.Join(homedir, manager.config.PluginsDir, filePath)
+	fullPath := filepath.Join(manager.config.PluginsDir, filePath)
 
 	fmt.Println("Loading plugin:", filePath)
 
-	info, err := os.Lstat(fullPath)
+	err := validateLibraryPath(filePath)
 	if err != nil {
-		if os.IsNotExist(err) {
-			return nil, errors.New("plugin not found")
-		}
 		return nil, err
-	}
-
-	if info.IsDir() {
-		return nil, errors.New("bad file path, path is a directory")
 	}
 
 	p, err := plugin.Open(fullPath)
@@ -153,6 +134,8 @@ func (manager PluginManager) LoadPlugin(filePath string) (*LoadedPluginInfo, err
 
 	pluginInstance := NewFn( /*manager.TaskService*/ )
 
+	validatePlugin(pluginInstance)
+
 	log.Println("[+] Loaded plugin ", pluginInstance.Info().Name)
 	manager.loadedPlugins[filePath] = &LoadedPluginInfo{
 		Plugin: pluginInstance,
@@ -170,17 +153,16 @@ func (manager PluginManager) LoadAllPlugins() ([]*LoadedPluginInfo, error) {
 		return nil, err
 	}
 
-	err = nil
 	for idx := range files {
 		file := files[idx]
 
 		loadedPlugin, err := manager.LoadPlugin(file)
 		if err != nil {
 			fmt.Println("[!] Error loading plugin: ", file)
-			continue
+			return plugins, err
 		}
 
 		plugins = append(plugins, loadedPlugin)
 	}
-	return plugins, err
+	return plugins, nil
 }

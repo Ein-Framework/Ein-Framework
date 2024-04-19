@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/Ein-Framework/Ein-Framework/core/config"
+	"github.com/Ein-Framework/Ein-Framework/pkg/config"
 	"github.com/urfave/cli/v2"
 )
 
