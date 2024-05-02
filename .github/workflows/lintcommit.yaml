@@ -16,4 +16,4 @@ jobs:
         with:
           # see `Inputs` section for more details
           since: "2024-03-30"
-          pattern: ^(?<type>build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test|¯\\_\(ツ\)_\/¯)(?<scope>\(\w+\)?((?=:\s)|(?=!:\s)))?(?<breaking>!)?(?<subject>:\s.*)?|^(?<merge>Merge \w+)
+          pattern: '^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\((.*?)\))?: (.*?)$'
