@@ -1,4 +1,4 @@
-name: Check Build
+name: Continuous Integration
 
 on: [push ]
 

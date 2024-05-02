@@ -1,4 +1,4 @@
-name: Git linter
+name: Lint commit Subject
 on: [push, pull_request]
 jobs:
   gitlint:
