@@ -43,9 +43,9 @@ func lookupError(currErr error, errorMsg string) error {
 	return errors.Join(currErr, errors.New(fmt.Sprintln("[-] Error: function lookup error in plugin", errorMsg)))
 }
 
-func reflectionError(currErr error, errorMsg string) error {
-	return errors.Join(currErr, errors.New(fmt.Sprintln("[-] Error: type reflection error in plugin", errorMsg)))
-}
+// func reflectionError(currErr error, errorMsg string) error {
+// 	return errors.Join(currErr, errors.New(fmt.Sprintln("[-] Error: type reflection error in plugin", errorMsg)))
+// }
 
 func (manager PluginManager) GetPlugin(filePath string) (*LoadedPluginInfo, error) {
 	loadedPlugin, ok := manager.loadedPlugins[filePath]

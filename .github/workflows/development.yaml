@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 name: Check Build
+=======
+name: Continuous Integration
+>>>>>>> fd1645c99c3bd5bf3fb4fc33e66e20880321ed56
 
 on: [push ]
 
