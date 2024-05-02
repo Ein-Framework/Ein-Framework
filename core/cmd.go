@@ -5,8 +5,13 @@ import (
 	"log"
 
 	"github.com/Ein-Framework/Ein-Framework/pkg/config"
-
 	"github.com/urfave/cli/v2"
+)
+
+type ConfigKey string
+
+const (
+	configKey ConfigKey = "config"
 )
 
 const (
@@ -29,7 +34,7 @@ func CreateApp(cmds ...[]*cli.Command) *cli.App {
 				log.Panicf("Error: loading configuration")
 			}
 
-			ctx.Context = context.WithValue(ctx.Context, "config", frameworkConfig)
+			ctx.Context = context.WithValue(ctx.Context, configKey, frameworkConfig)
 			return nil
 
 		},
