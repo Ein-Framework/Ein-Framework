@@ -3,16 +3,16 @@ root = "."
 tmp_dir = "tmp"
 
 [build]
-cmd = "go build -o ./tmp/main ./cmd/ein.go"
-bin = "tmp/main"
-full_bin = "tmp/main"
+cmd = "go build -o ./tmp/ein ./cmd/ein.go"
+bin = "tmp/ein"
+full_bin = "tmp/ein"
 args_bin = ["server"]
 log = "tmp/air.log"
-delay = 1000                                # ms
+delay = 1000  # ms
 stop_signal = "SIGTERM"
 
 [log]
-time = false
+time = true
 
 [misc]
 clean_on_exit = true

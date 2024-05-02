@@ -1,39 +1,46 @@
 # ein-framework
 
-- Go version: Go 1.22.1
+> Go version: Go 1.22.1
 
 - Install env
 
 ```shell
-make install
+sudo make install
 ```
 
 - Build binary
 
 ```shell
-go build -o ein .
+make build
 ```
 
 - Start Development workflow
 
 ```shell
-	air
+make dev 
 ```
 
 - Clean workspace
 
 ```shell
-rm -f ein
+make clean
 ```
 
 - Build Docker
 
 ```
-docker-compose -f ./scripts/docker-compose.yml build
+make docker-build
 ```
 
 - Run Docker
 
 ```shell
-	docker-compose -f ./scripts/docker-compose.yml up
+make docker-run
+```
+
+
+- Build for release
+
+```shell
+make release
 ```
