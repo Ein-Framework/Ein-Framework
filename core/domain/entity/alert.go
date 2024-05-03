@@ -1,5 +1,7 @@
 package entity
 
-// An alert type
+
 type AlertModel struct {
+	Title       string
+	Description string
 }
