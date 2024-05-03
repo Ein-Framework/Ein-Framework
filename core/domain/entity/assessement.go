@@ -1,12 +1,13 @@
-package assessment
+package entity
 
 type AssessmentStage struct {
-	Description string
-	Name        string
-	Completed   string
-	Keywords    []string // Alternative names for the stage
-	Link        string
-	Tasks       []Task
+	Name         string
+	Description  string
+	Completed    string
+	Keywords     []string // Alternative names for the stage
+	Link         string
+	Tasks        []Task
+	AssessmentID uint
 }
 
 type AssessmentType string
@@ -17,12 +18,14 @@ const (
 )
 
 type Assessment struct {
+	ID              uint
 	Name            string
 	Type            AssessmentType
 	Scope           Scope
 	Assets          []Asset
 	Stage           AssessmentStage
 	EngagementRules EngagementRules
+	Jobs            []Job
 }
 
 func New() {

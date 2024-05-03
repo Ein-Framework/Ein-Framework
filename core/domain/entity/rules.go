@@ -1,4 +1,4 @@
-package assessment
+package entity
 
 type HeaderInjectionType string
 
@@ -21,6 +21,7 @@ type TestCredentials struct {
 }
 
 type EngagementRules struct {
+	ID uint
 	FullDescription    string // Display as markdown
 	RateLimitPerSecond int
 	Threads            int

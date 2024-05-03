@@ -1,4 +1,4 @@
-package assessment
+package entity
 
 type AssetType string
 
@@ -12,6 +12,7 @@ const (
 )
 
 type Asset struct {
+	ID    uint
 	Type  AssetType
 	Value string
 }
@@ -21,6 +22,7 @@ type Vulnerability struct {
 }
 
 type Scope struct {
+	ID                   uint
 	InScope              []Asset
 	OutScope             []Asset
 	ClientRecommendation string
