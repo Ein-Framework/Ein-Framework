@@ -33,7 +33,7 @@ func parseConfig() *Config {
 	}
 	configFilePath := filepath.Join(userHomeDir, defaultPath)
 
-	config, err := parseConfigFromFile(configFilePath)
+	config, err := ParseConfigFromFile(configFilePath)
 	if err != nil {
 		log.Panicln(err)
 	}
@@ -41,7 +41,7 @@ func parseConfig() *Config {
 	return config
 }
 
-func parseConfigFromFile(filePath string) (*Config, error) {
+func ParseConfigFromFile(filePath string) (*Config, error) {
 	f, err := os.ReadFile(filePath)
 
 	if err != nil {
