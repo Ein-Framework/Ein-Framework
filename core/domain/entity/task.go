@@ -33,6 +33,7 @@ const (
 )
 
 type Job struct {
+	gorm.Model
 	Type JobType `gorm:"type:text"`
 	Name string
 }

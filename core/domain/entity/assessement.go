@@ -28,10 +28,10 @@ type Report struct {
 
 type Assessment struct {
 	gorm.Model
-	Name    string         `json:"name"`
-	Type    AssessmentType `json:"type" gorm:"type:text"`
-	Scope   Scope          `json:"scope" gorm:"foreignkey:ScopeID;association_foreignkey:ID;"`
-	ScopeID uint           `json:"-"`
+	Name              string          `json:"name"`
+	Type              AssessmentType  `json:"type" gorm:"type:text"`
+	Scope             Scope           `json:"scope" gorm:"foreignkey:ScopeID;association_foreignkey:ID;"`
+	ScopeID           uint            `json:"-"`
 	Assets            []Asset         `json:"assets" gorm:"many2many:assessment_assets;"`
 	Stage             AssessmentStage `json:"assessmentStage" gorm:"foreignkey:StageID;association_foreignkey:ID;"`
 	StageID           uint            `json:"-"`
@@ -48,9 +48,9 @@ func NewAssessment(name string, assessmentType AssessmentType, scope Scope, repo
 	}
 
 	return &Assessment{
-		Name: name,
+		Name:    name,
 		Type:    assessmentType,
-		Scope: scope,
+		Scope:   scope,
 		Stage:   *reconStage,
 		Assets:  []Asset{},
 		Jobs:    []Job{},
