@@ -25,7 +25,7 @@ type Repository interface {
 
 	// GetOneByID assumes you have a PK column "id" which is a UUID. If this is not the case just ignore the method
 	// and add a custom struct with this Repository embedded.
-	GetOneByID(target interface{}, id string, preloads ...string) error
+	GetOneByID(target interface{}, id uint, preloads ...string) error
 
 	Create(target interface{}) error
 	Save(target interface{}) error

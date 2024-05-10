@@ -1,5 +1,7 @@
 package entity
 
+import "gorm.io/gorm"
+
 type AssetType string
 
 const (
@@ -12,20 +14,21 @@ const (
 )
 
 type Asset struct {
-	ID    uint      `json:"id"`
-	Type  AssetType `json:"type"`
+	gorm.Model
+	Type  AssetType `json:"type" gorm:"type:text"`
 	Value string    `json:"value"`
 }
 
 type Vulnerability struct {
+	gorm.Model
 	Description string `json:"description"`
 }
 
 type Scope struct {
-	ID                     uint            `json:"id"`
-	InScope                []Asset         `json:"inScope"`
-	OutScope               []Asset         `json:"outScope"`
+	gorm.Model
+	InScope                []Asset         `json:"inScope" gorm:"many2many:scope_in_assets;"`
+	OutScope               []Asset         `json:"outScope" gorm:"many2many:scope_out_assets;"`
 	ClientRecommendation   string          `json:"clientRecommandations"`
-	AllowedVulnerabilities []Vulnerability `json:"allowedVulnerabilities"`
-	RefusedVulnerabilities []Vulnerability `json:"refusedVulnerabilities"`
+	AllowedVulnerabilities []Vulnerability `json:"allowedVulnerabilities" gorm:"many2many:scope_allowed_vulnerabilities;"`
+	RefusedVulnerabilities []Vulnerability `json:"refusedVulnerabilities" gorm:"many2many:scope_refused_vulnerabilities;"`
 }

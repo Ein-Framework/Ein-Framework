@@ -1,9 +1,12 @@
 package entity
 
+import "gorm.io/gorm"
+
 type User struct {
-	Username        string
-	Password        string
-	Email           string
-	Assessments     []Assessment
-	CustomTemplates []Template
+	gorm.Model
+	Username    string       `json:"username"`
+	Password    string       `json:"password"`
+	Email       string       `json:"email"`
+	Assessments []Assessment `json:"assessments" gorm:"many2many:user_assessments;"`
+	// CustomTemplates []Template   `json:"customTemplates"`
 }

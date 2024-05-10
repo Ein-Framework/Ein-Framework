@@ -19,6 +19,7 @@ func (orm *ORMConnection) Seed(db *gorm.DB) {
 }
 
 func NewDatabase(cfg config.DatabaseConfig) (*ORMConnection, error) {
+	fmt.Println(cfg)
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable", cfg.Host, cfg.Username, cfg.Password, cfg.Name, cfg.Port)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
@@ -27,13 +28,20 @@ func NewDatabase(cfg config.DatabaseConfig) (*ORMConnection, error) {
 		return nil, err
 	}
 	if err = db.AutoMigrate(
+		&entity.Attachement{},
+		&entity.Asset{},
 		&entity.Alert{},
+		&entity.Vulnerability{},
+		&entity.Scope{},
+		&entity.Report{},
 		&entity.Task{},
-		&entity.Assessment{},
+		&entity.TestCredentials{},
+		&entity.HeaderInjection{},
 		&entity.AssessmentStage{},
 		&entity.EngagementRules{},
-		&entity.TestCredentials{},
 		&entity.Job{},
+		&entity.Assessment{},
+		&entity.User{},
 	); err != nil {
 		log.LogError("[-] error: migrating database")
 		return nil, err

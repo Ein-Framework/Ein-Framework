@@ -1,7 +1,9 @@
 package entity
 
+import "gorm.io/gorm"
+
 type Alert struct {
-	ID          uint   `json:"id"`
+	gorm.Model
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Scope       string `scope:"scope"`

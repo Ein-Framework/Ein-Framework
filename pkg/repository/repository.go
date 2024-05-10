@@ -186,7 +186,7 @@ func (r *gormRepository) GetOneByFields(target interface{}, filters map[string]i
 	return r.HandleOneError(res)
 }
 
-func (r *gormRepository) GetOneByID(target interface{}, id string, preloads ...string) error {
+func (r *gormRepository) GetOneByID(target interface{}, id uint, preloads ...string) error {
 	r.logger.Debugf("Executing GetOneByID on %T with ID %v", target, id)
 
 	res := r.DBWithPreloads(preloads).

@@ -47,6 +47,7 @@ func CreateDefaultConfig() *Config {
 			Port:     5432,
 			Username: "ein",
 			Password: "password",
+			Name:     "ein",
 		},
 		ServerHTTPPort: 8081,
 		Host:           "localhost",
