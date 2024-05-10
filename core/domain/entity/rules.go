@@ -8,23 +8,23 @@ const (
 )
 
 type HeaderInjection struct {
-	HeaderName   string
-	Type         HeaderInjectionType
-	HeaderPrefix string
-	HeaderValue  string
+	HeaderName   string              `json:"name"`
+	Type         HeaderInjectionType `json:"type"`
+	HeaderPrefix string              `json:"prefix"`
+	HeaderValue  string              `json:"value"`
 }
 
 type TestCredentials struct {
-	Credentials string
-	Domain      []string
-	Description string
+	Credentials string   `json:"credentials"`
+	Domains     []string `json:"domains"`
+	Description string   `json:"description"`
 }
 
 type EngagementRules struct {
-	ID uint
-	FullDescription    string // Display as markdown
-	RateLimitPerSecond int
-	Threads            int
-	HeaderUse          *HeaderInjection
-	TestCredentials    *TestCredentials
+	ID                 uint             `json:"id"`
+	FullDescription    string           `json:"fullDescription"` // Display as markdown
+	RateLimitPerSecond int              `json:"rateLimitPerSecond"`
+	Threads            int              `json:"threads"`
+	HeaderUse          *HeaderInjection `json:"headerInjection"`
+	TestCredentials    *TestCredentials `json:"testCredentials"`
 }

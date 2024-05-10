@@ -1,13 +1,13 @@
 package entity
 
 type AssessmentStage struct {
-	Name         string
-	Description  string
-	Completed    string
-	Keywords     []string // Alternative names for the stage
-	Link         string
-	Tasks        []Task
-	AssessmentID uint
+	Name         string   `json:"name"`
+	Description  string   `json:"description"`
+	Completed    bool     `json:"completed"`
+	Keywords     []string `json:"keywords"`
+	Link         string   `json:"link"`
+	Tasks        []Task   `json:"tasks"`
+	AssessmentID uint     `json:"assessmentId"`
 }
 
 type AssessmentType string
@@ -17,19 +17,31 @@ const (
 	BB  AssessmentType = "bb"
 )
 
+type Attachement struct {
+	Type string `json:"type"`
+	Link string `json:"link"`
+}
+
+type Report struct {
+	Title        string        `json:"title"`
+	Description  string        `json:"description"`
+	Attachements []Attachement `json:"attachements"`
+	Severity     uint          `json:"severity"`
+}
+
 type Assessment struct {
 	ID              uint
-	Name            string
-	Type            AssessmentType
-	Scope           Scope
-	Assets          []Asset
-	Stage           AssessmentStage
-	EngagementRules EngagementRules
-	Jobs            []Job
+	Name            string          `json:"name"`
+	Type            AssessmentType  `json:"type"`
+	Scope           Scope           `json:"scope"`
+	Assets          []Asset         `json:"assets"`
+	Stage           AssessmentStage `json:"assessmentStage"`
+	EngagementRules EngagementRules `json:"engagementRules"`
+	Jobs            []Job           `json:"jobs"`
+	Reports         []string        `json:"reports"`
 }
 
 func New() {
-	// Setup stages from the config
 }
 
 func ToggleStageCompletion() {

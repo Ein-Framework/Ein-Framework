@@ -1,8 +1,8 @@
 package entity
 
-type AlertModel struct {
-	ID          uint
-	Title       string
-	Description string
-	Scope       string
+type Alert struct {
+	ID          uint   `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Scope       string `scope:"scope"`
 }

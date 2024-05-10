@@ -39,16 +39,17 @@ func ConfigCommands() []*cli.Command {
 		},
 
 		Action: func(ctx *cli.Context) error {
+
 			file := ctx.String("file")
 			if file == "default" {
-				log.Println("No configuration file was passed.")
+				fmt.Println("No configuration file was passed.")
 				return errors.New("no configuration file was passed")
 			}
 
 			einConfig, err := config.ParseConfigFromFile(file)
 
 			if err != nil {
-				log.Println("Error occurred while parsing configuration file.", err)
+				fmt.Println("Error occurred while parsing configuration file.", err)
 				return err
 			}
 

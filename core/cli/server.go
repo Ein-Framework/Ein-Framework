@@ -2,6 +2,7 @@ package cli
 
 import (
 	"github.com/Ein-Framework/Ein-Framework/pkg/config"
+	"github.com/Ein-Framework/Ein-Framework/pkg/log"
 	"github.com/urfave/cli/v2"
 )
 
@@ -18,15 +19,7 @@ func ServerCommands() []*cli.Command {
 				return nil
 			}
 
-			// var serverManager IServerManager = &Manager{}
-			go func() {
-				<-make(chan int)
-				// err := serverManager.NewgRPCServer(frameworkConfig)
-				// if err != nil {
-				// 	log.Println("Error launching GRPC server")
-				// 	return
-				// }
-			}()
+			log.LogError("Server not implemented Yet")
 
 			return nil
 		},

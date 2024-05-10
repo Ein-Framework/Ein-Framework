@@ -2,20 +2,18 @@ package entity
 
 import "time"
 
+type Template interface{}
+
 type OutputFormat string
 
 const (
-	CsvOutput  = "csv"
-	JsonOutput = "json"
-	HTMLOutput = "html"
-	TextOutout = "txt"
+	CsvOutput  OutputFormat = "csv"
+	JsonOutput OutputFormat = "json"
+	HTMLOutput OutputFormat = "html"
+	TextOutout OutputFormat = "txt"
 )
 
-// TODO: Change to concrete type when Template module is ready
-
 type TaskState string
-
-type Args map[string]string
 
 const (
 	Running  TaskState = "Running"
@@ -24,8 +22,6 @@ const (
 	Canceled TaskState = "Canceled"
 	Queued   TaskState = "Queued"
 )
-
-type Template interface{}
 
 type JobType string
 
@@ -46,7 +42,6 @@ type PeriodConfiguration struct {
 type CronJob struct {
 	Job
 	PeriodConfiguration PeriodConfiguration
-	
 }
 
 type Task struct {
@@ -56,6 +51,6 @@ type Task struct {
 	State           TaskState
 	Output          string
 	OutputFormat    OutputFormat
-	Args            Args
+	Args            map[string]string
 	AssessmentStage AssessmentStage
 }

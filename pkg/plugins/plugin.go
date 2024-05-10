@@ -50,7 +50,7 @@ type IPlugin interface {
 	MetaInfo() *Metadata
 	Info() *PluginInfo
 	Options() map[string]string
-	Execute(...interface{}) []entity.AlertModel
+	Execute(...interface{}) []entity.Alert
 	SetArgs(map[string]interface{}) error
 	IsWaitingForTaskResult() (bool, string)
 }

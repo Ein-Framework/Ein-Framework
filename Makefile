@@ -16,7 +16,7 @@ install:
 
 .PHONY: dev
 dev:
-	air -c server.air.toml
+	air 
 
 .PHONY: release
 release:
@@ -34,3 +34,7 @@ docker-build:
 .PHONY: docker-run
 docker-run:
 	docker-compose -f ./scripts/docker-compose.yml up
+
+.PHONY: start-db
+start-db:
+	docker-compose -f ./scripts/db.docker-compose.yml up

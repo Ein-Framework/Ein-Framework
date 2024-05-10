@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"os"
 
 	"github.com/Ein-Framework/Ein-Framework/pkg/config"
 	"github.com/Ein-Framework/Ein-Framework/pkg/log"
@@ -24,18 +23,13 @@ func CreateCli(cmds ...[]*cli.Command) *cli.App {
 		Name: CliName,
 		Before: func(ctx *cli.Context) error {
 
-			debugEnable := os.Getenv("EIN_DEBUG")
-
-			logger := log.New(debugEnable == "1")
 			frameworkConfig, err := config.GetConfig()
 			if err != nil {
-				logger.Sugar().Panicln("[-] Error: loading configuration")
+				log.Fatal("[-] error: loading configuration")
 			}
 
-			logger.Sugar().Infoln(frameworkConfig)
-
 			ctx.Context = context.WithValue(ctx.Context, configKey, frameworkConfig)
-			ctx.Context = context.WithValue(ctx.Context, loggerKey, logger)
+			ctx.Context = context.WithValue(ctx.Context, loggerKey, log.GetLogger())
 
 			return nil
 		},
@@ -65,4 +59,3 @@ func CreateCli(cmds ...[]*cli.Command) *cli.App {
 
 	return app
 }
-
