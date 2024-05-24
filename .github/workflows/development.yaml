@@ -1,18 +1,13 @@
-<<<<<<< HEAD
-name: Check Build
-=======
 name: Continuous Integration
->>>>>>> fd1645c99c3bd5bf3fb4fc33e66e20880321ed56
 
-on: [push ]
+on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: [ '1.21.x', '1.22.x' ]
+        go-version: ["1.21.x", "1.22.x"]
 
     steps:
       - uses: actions/checkout@v4
@@ -21,4 +16,4 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Check Build
-        run: make build 
+        run: make build
