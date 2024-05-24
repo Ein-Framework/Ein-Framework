@@ -3,6 +3,7 @@ module github.com/Ein-Framework/Ein-Framework
 go 1.22.1
 
 require (
+	github.com/labstack/echo/v4 v4.12.0
 	github.com/urfave/cli/v2 v2.27.1
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/gorm v1.25.7-0.20240204074919-46816ad31dde
@@ -16,7 +17,6 @@ require (
 	github.com/jackc/pgx/v5 v5.4.3 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/labstack/echo/v4 v4.12.0 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -37,7 +37,6 @@ require (
 require (
 	github.com/charmbracelet/lipgloss v0.10.0
 	github.com/cpuguy83/go-md2man/v2 v2.0.3 // indirect
-	github.com/google/uuid v1.6.0
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
