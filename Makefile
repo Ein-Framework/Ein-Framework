@@ -12,10 +12,11 @@ install:
 	echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/apt/sources.list.d/goreleaser.list
 	sudo apt update
 	sudo apt install goreleaser
+	go install honnef.co/go/tools/cmd/staticcheck@latest
 
 .PHONY: dev
 dev:
-	air -c server.air.toml
+	air 
 
 .PHONY: release
 release:
@@ -33,3 +34,7 @@ docker-build:
 .PHONY: docker-run
 docker-run:
 	docker-compose -f ./scripts/docker-compose.yml up
+
+.PHONY: start-db
+start-db:
+	docker-compose -f ./scripts/db.docker-compose.yml up

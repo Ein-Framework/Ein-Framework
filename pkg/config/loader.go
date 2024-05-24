@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	NotFound       string = "the configuration file was not found to its specified path. If it's the first time using the framework add `gen-config` or `genc` to generate a config file"
-	parsingFailure string = "error: Parsing configuration file has failed"
+	NotFound       string = "[-] error: the configuration file was not found to its specified path. If it's the first time using the framework add `gen-config` or `genc` to generate a config file"
+	parsingFailure string = "[-] error: Parsing configuration file has failed"
+	UnknownError   string = "[-] error: Unknown error occurred"
 )
 
 func GetConfig() (*Config, error) {
@@ -19,33 +20,41 @@ func GetConfig() (*Config, error) {
 	err := GenerateConfigIfNotExists()
 
 	if err != nil {
-		log.Fatalln("Error getting configuration")
+		log.Fatalln("[-] error getting configuration")
 	}
 
-	return parseConfig(), nil
+	return parseConfig()
+
 }
 
-func parseConfig() *Config {
+func parseConfig() (*Config, error) {
 	userHomeDir, err := os.UserHomeDir()
 
 	if err != nil {
-		log.Panicln("Error retrieving user home directory")
+		log.Panicln("[-] error: Unable to retrieve user home directory")
 	}
-	configFilePath := filepath.Join(userHomeDir, defaultPath)
 
-	config, err := parseConfigFromFile(configFilePath)
+	configFilePath := filepath.Join(userHomeDir, DefaultPath())
+
+	config, err := ParseConfigFromFile(configFilePath)
 	if err != nil {
-		log.Panicln(err)
+
+		return nil, err
 	}
 
-	return config
+	return config, nil
 }
 
-func parseConfigFromFile(filePath string) (*Config, error) {
+func ParseConfigFromFile(filePath string) (*Config, error) {
+
 	f, err := os.ReadFile(filePath)
 
 	if err != nil {
-		return nil, errors.New(NotFound)
+		if os.IsNotExist(err) {
+			return nil, errors.New(NotFound)
+		}
+
+		return nil, errors.New(UnknownError)
 	}
 
 	var config Config

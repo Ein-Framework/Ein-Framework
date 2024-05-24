@@ -16,13 +16,13 @@ func validateLibraryPath(libraryPath string) error {
 	info, err := os.Lstat(libraryPath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return eParseError("plugin not found")
+			return eParseError("[-] error: plugin not found")
 		}
 		return err
 	}
 
 	if info.IsDir() {
-		return eParseError("bad file path, path is a directory")
+		return eParseError("[-] error: bad file path, path is a directory")
 	}
 
 	return nil
@@ -30,12 +30,12 @@ func validateLibraryPath(libraryPath string) error {
 
 func checkPluginType(pluginType PluginType) {
 	if pluginType <= UndefinedType || pluginType >= UndefinedType {
-		pParseError("Invalid Login Type")
+		pParseError("[-] error: Invalid Login Type")
 	}
 }
 
 func pParseError(errorMessage string) {
-	log.Panicln("Error: Failed to parse", errorMessage)
+	log.Panicln("[-] error: Failed to parse", errorMessage)
 }
 
 func eParseError(errorMessage string) error {

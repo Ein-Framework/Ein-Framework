@@ -10,7 +10,7 @@ import (
 
 func CheckIfConfigExistsInPath() (bool, error) {
 
-	_, err := os.ReadFile(defaultPath)
+	_, err := os.ReadFile(DefaultPath())
 
 	if err != nil {
 		// if err == os.ErrInvalid {
@@ -52,16 +52,16 @@ func createDefaultConfigs() {
 	if err != nil {
 		err := os.Mkdir(configDirPath, 0777)
 		if err != nil {
-			log.Fatalln("Error creating .c2-chopper folder at home directory", err)
+			log.Fatalln("[-] error creating .c2-chopper folder at home directory", err)
 		}
 	}
 
-	configFilePath := path.Join(currentUserHomeDirectory, defaultPath)
+	configFilePath := path.Join(currentUserHomeDirectory, DefaultPath())
 	config := CreateDefaultConfig()
 	err = writeConfigToPath(config, configFilePath)
 
 	if err != nil {
-		log.Fatalln("Error marshalling configuration sturct")
+		log.Fatalln("[-] error marshalling configuration sturct")
 	}
 
 }

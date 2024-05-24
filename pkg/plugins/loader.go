@@ -40,7 +40,7 @@ func CreatePluginManager(cfg *Cfg.Config /*taskService services.ITaskService*/) 
 }
 
 func lookupError(currErr error, errorMsg string) error {
-	return errors.Join(currErr, errors.New(fmt.Sprintln("[-] Error: function lookup error in plugin", errorMsg)))
+	return errors.Join(currErr, errors.New(fmt.Sprintln("[-] error: function lookup error in plugin", errorMsg)))
 }
 
 // func reflectionError(currErr error, errorMsg string) error {
@@ -158,7 +158,7 @@ func (manager PluginManager) LoadAllPlugins() ([]*LoadedPluginInfo, error) {
 
 		loadedPlugin, err := manager.LoadPlugin(file)
 		if err != nil {
-			fmt.Println("[!] Error loading plugin: ", file)
+			fmt.Println("[-] error loading plugin: ", file)
 			return plugins, err
 		}
 

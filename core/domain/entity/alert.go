@@ -1,5 +1,10 @@
 package entity
 
-// An alert type
-type AlertModel struct {
+import "gorm.io/gorm"
+
+type Alert struct {
+	gorm.Model
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Scope       string `scope:"scope"`
 }
