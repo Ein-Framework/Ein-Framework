@@ -15,5 +15,5 @@ jobs:
         uses: g4s8/gitlint-action@0.2
         with:
           # see `Inputs` section for more details
-          since: "2024-05-02"
+          since: "2024-05-25"
           pattern: '^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\(\w+((,|\/|\\)?\s?\w+)+\))?!?: [\S ]{1,49}[^\.]$'
