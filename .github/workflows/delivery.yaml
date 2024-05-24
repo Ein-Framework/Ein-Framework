@@ -1,4 +1,4 @@
-name: Deploy
+name: Delivery
 
 on:
   push:
@@ -7,22 +7,22 @@ on:
 jobs:
   install-deps:
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        go-version: ["1.21.x", "1.22.x"]
     steps:
       - uses: actions/checkout@v2
 
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: 1.22.1
 
       - name: Install go deps
         run: go mod tidy
 
       - name: Build packages
         run: go build -v ./...
+
+      - name: "Tag"
+        uses: anothrNick/github-tag-action@1.36.0
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@master
