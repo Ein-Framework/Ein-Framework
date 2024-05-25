@@ -10,6 +10,10 @@ type TemplatingManager struct {
 	PluginsManager plugins.IPluginManager
 }
 
+type ITemplateManager interface {
+	ReadTemplate(templatePath string) *TemplateData
+}
+
 type TemplateData struct {
 	Meta  *TemplateMeta `yaml:"meta"`
 	Steps []TemplateSteps

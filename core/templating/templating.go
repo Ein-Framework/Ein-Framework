@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func New(cfg *config.Config, services *services.Services, logger *zap.Logger) *TemplatingManager {
+func New(cfg *config.Config, services *services.Services, logger *zap.Logger) ITemplateManager {
 	pluginsManager := plugins.New(cfg)
 	pluginsManager.LoadAllPlugins()
 

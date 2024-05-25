@@ -22,7 +22,7 @@ func CreateConfig() *config.Config {
 	}
 }
 
-func CreateManagerService(t *testing.T, config *config.Config) *TemplatingManager {
+func CreateManagerService(t *testing.T, config *config.Config) ITemplateManager {
 	logger := log.GetLogger()
 
 	mockdb, _, err := sqlmock.New()

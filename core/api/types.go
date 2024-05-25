@@ -6,7 +6,7 @@ import (
 )
 
 type AppComponents struct {
-	TemplatingManager *templating.TemplatingManager
+	TemplatingManager templating.ITemplateManager
 }
 
 type ApiService struct {
