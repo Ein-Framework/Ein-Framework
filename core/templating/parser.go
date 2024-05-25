@@ -8,12 +8,12 @@ import (
 func getStringField(dict map[string]interface{}, field string) (string, error) {
 	val, ok := dict[field]
 	if !ok {
-		return "", errors.New(fmt.Sprintf("`%s` is missing in template content", field))
+		return "", fmt.Errorf("`%s` is missing in template content", field)
 	}
 
 	valStr, ok := val.(string)
 	if !ok {
-		return "", errors.New(fmt.Sprintf("`%s` is missing in template content", field))
+		return "", fmt.Errorf("`%s` is missing in template content", field)
 	}
 
 	return valStr, nil
@@ -51,7 +51,25 @@ func parseTemplateContent(data interface{}) (*TemplateData, error) {
 		return nil, err
 	}
 
+	steps := make([]TemplateSteps, len(json))
+	i := 0
+	for k := range json {
+		if k == "meta" {
+			continue
+		}
+
+		data, ok := json[k].(map[string]interface{})
+		if !ok {
+			return nil, fmt.Errorf("unable to convert %s to map", k)
+		}
+
+		steps[i].Protocol = k
+		steps[i].Data = data
+		i++
+	}
+
 	return &TemplateData{
-		Meta: metaParsed,
+		Meta:  metaParsed,
+		Steps: steps,
 	}, nil
 }

@@ -11,8 +11,8 @@ type TemplatingManager struct {
 }
 
 type TemplateData struct {
-	Meta *TemplateMeta `yaml:"meta"`
-	// Steps []TemplateSteps
+	Meta  *TemplateMeta `yaml:"meta"`
+	Steps []TemplateSteps
 }
 
 type TemplateMeta struct {
@@ -22,5 +22,5 @@ type TemplateMeta struct {
 
 type TemplateSteps struct {
 	Protocol string
-	data     interface{}
+	Data     map[string]interface{}
 }
