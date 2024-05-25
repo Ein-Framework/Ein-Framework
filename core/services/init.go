@@ -6,10 +6,10 @@ import (
 	"go.uber.org/zap"
 )
 
-func InitServices(db *domain.ORMConnection, logger *zap.Logger, config *config.Config) Services {
+func InitServices(db *domain.ORMConnection, logger *zap.Logger, config *config.Config) *Services {
 	context := BuildContext(db, logger, config)
 
-	return Services{
+	return &Services{
 		AssessmentService: NewAssessmentService(context),
 	}
 }

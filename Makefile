@@ -18,6 +18,10 @@ install:
 dev:
 	air 
 
+.PHONY: test
+test:
+	go test -race -vet=off -v ./...
+
 .PHONY: release
 release:
 	goreleaser release --snapshot --clean

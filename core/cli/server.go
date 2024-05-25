@@ -6,6 +6,7 @@ import (
 	"github.com/Ein-Framework/Ein-Framework/core/api"
 	"github.com/Ein-Framework/Ein-Framework/core/domain"
 	"github.com/Ein-Framework/Ein-Framework/core/services"
+	"github.com/Ein-Framework/Ein-Framework/core/templating"
 	"github.com/Ein-Framework/Ein-Framework/pkg/config"
 	"github.com/Ein-Framework/Ein-Framework/pkg/log"
 	"github.com/urfave/cli/v2"
@@ -13,7 +14,6 @@ import (
 )
 
 func ServerCommands() []*cli.Command {
-
 	startServerCommand := &cli.Command{
 		Name:    "server",
 		Aliases: []string{"svr"},
@@ -43,7 +43,7 @@ func ServerCommands() []*cli.Command {
 			// Initialize services
 			coreServices := services.InitServices(db, logger, frameworkConfig)
 
-			api.New(coreServices, frameworkConfig, logger)
+			InitComponents(coreServices, frameworkConfig, logger)
 			return nil
 		},
 	}
@@ -51,6 +51,13 @@ func ServerCommands() []*cli.Command {
 	var commands []*cli.Command
 
 	commands = append(commands, startServerCommand)
-
 	return commands
+}
+
+func InitComponents(coreServices *services.Services, frameworkConfig *config.Config, logger *zap.Logger) *api.AppComponents {
+	components := &api.AppComponents{
+		TemplatingManager: templating.New(frameworkConfig, coreServices, logger),
+	}
+	api.New(coreServices, components, frameworkConfig, logger)
+	return components
 }

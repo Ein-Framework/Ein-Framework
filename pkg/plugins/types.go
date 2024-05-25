@@ -15,9 +15,11 @@ type IPluginManager interface {
 	LoadAllPlugins() ([]*LoadedPluginInfo, error)
 	LoadPlugin(filePath string) (*LoadedPluginInfo, error)
 	GetPlugin(filePath string) (*LoadedPluginInfo, error)
+	GetPluginByProtocol(protocol string) (*LoadedPluginInfo, error)
 }
 
 type PluginManager struct {
-	config        *Cfg.Config
-	loadedPlugins map[string]*LoadedPluginInfo
+	config           *Cfg.Config
+	loadedPlugins    map[string]*LoadedPluginInfo
+	protocolToPlugin map[string]*LoadedPluginInfo
 }

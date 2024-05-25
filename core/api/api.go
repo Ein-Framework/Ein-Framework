@@ -11,10 +11,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-type ApiService struct {
-}
-
-func New(coreServices services.Services, config *config.Config, logger *zap.Logger) {
+func New(coreServices *services.Services, components *AppComponents, config *config.Config, logger *zap.Logger) *ApiService {
 	e := echo.New()
 
 	// Middleware
@@ -27,4 +24,8 @@ func New(coreServices services.Services, config *config.Config, logger *zap.Logg
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", config.ServerHTTPPort)))
 
+	return &ApiService{
+		server:     e,
+		components: components,
+	}
 }

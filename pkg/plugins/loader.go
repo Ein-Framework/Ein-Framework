@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"plugin"
+	"reflect"
 	"strings"
 )
 
@@ -40,8 +41,13 @@ func (manager PluginManager) ListAllPlugins() ([]string, error) {
 	)
 
 	files, err := os.ReadDir(manager.config.PluginsDir)
+	if os.IsNotExist(err) {
+		os.Mkdir(manager.config.PluginsDir, os.ModePerm)
+		files, err = os.ReadDir(manager.config.PluginsDir)
+	}
+
 	if err != nil {
-		// log.Panicln("Error: Cannot load plugins, No directory found.", err)
+		log.Panicln("Error: Cannot load plugins, No directory found.", err)
 		return nil, err
 	}
 
@@ -58,12 +64,22 @@ func (manager PluginManager) ListAllPlugins() ([]string, error) {
 }
 
 func (manager *PluginManager) UnloadPlugin(filePath string) error {
-	_, ok := manager.loadedPlugins[filePath]
+	loadedPlugin, ok := manager.loadedPlugins[filePath]
 	if !ok {
 		return errors.New("plugin not loaded")
 	}
 
 	delete(manager.loadedPlugins, filePath)
+
+	protocol := loadedPlugin.Plugin.Info().Protocol
+	protocolPlugin, ok := manager.protocolToPlugin[protocol]
+	if !ok {
+		return errors.New("unknown error occured")
+	}
+
+	if reflect.ValueOf(protocolPlugin).Pointer() == reflect.ValueOf(loadedPlugin).Pointer() {
+		delete(manager.protocolToPlugin, protocol)
+	}
 	return nil
 }
 
@@ -110,6 +126,8 @@ func (manager PluginManager) LoadPlugin(filePath string) (*LoadedPluginInfo, err
 	manager.loadedPlugins[filePath] = &LoadedPluginInfo{
 		Plugin: pluginInstance,
 	}
+	manager.protocolToPlugin[pluginInstance.Info().Protocol] = manager.loadedPlugins[filePath]
+
 	return manager.loadedPlugins[filePath], nil
 }
 
@@ -135,4 +153,12 @@ func (manager PluginManager) LoadAllPlugins() ([]*LoadedPluginInfo, error) {
 		plugins = append(plugins, loadedPlugin)
 	}
 	return plugins, nil
+}
+
+func (manager PluginManager) GetPluginByProtocol(protocol string) (*LoadedPluginInfo, error) {
+	loadedPlugin, ok := manager.protocolToPlugin[protocol]
+	if !ok {
+		return nil, errors.New("plugin not loaded")
+	}
+	return loadedPlugin, nil
 }
