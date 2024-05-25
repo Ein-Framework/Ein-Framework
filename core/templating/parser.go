@@ -31,12 +31,12 @@ func parseTemplateMeta(meta map[string]interface{}) (*TemplateMeta, error) {
 }
 
 func parseTemplateContent(data interface{}) (*TemplateData, error) {
-	json, ok := data.(map[string]interface{})
+	mapData, ok := data.(map[string]interface{})
 	if !ok {
 		return nil, errors.New("unable to convert template content to map")
 	}
 
-	meta, ok := json["meta"]
+	meta, ok := mapData["meta"]
 	if !ok {
 		return nil, errors.New("`meta` is missing in template content")
 	}
@@ -51,25 +51,31 @@ func parseTemplateContent(data interface{}) (*TemplateData, error) {
 		return nil, err
 	}
 
-	steps := make([]TemplateSteps, len(json)-1)
-	i := 0
-	for k := range json {
-		if k == "meta" {
-			continue
-		}
+	steps, ok := mapData["steps"]
+	if !ok {
+		return nil, errors.New("`steps` is missing in template content")
+	}
 
-		data, ok := json[k].(map[string]interface{})
+	stepsMap, ok := steps.(map[string]interface{})
+	if !ok {
+		return nil, errors.New("invalid `steps`, must be a map")
+	}
+
+	stepsArr := make([]TemplateSteps, len(stepsMap))
+	i := 0
+	for k := range stepsMap {
+		data, ok := stepsMap[k].(map[string]interface{})
 		if !ok {
 			return nil, fmt.Errorf("unable to convert %s to map", k)
 		}
 
-		steps[i].Protocol = k
-		steps[i].Data = data
+		stepsArr[i].Protocol = k
+		stepsArr[i].Data = data
 		i++
 	}
 
 	return &TemplateData{
 		Meta:  metaParsed,
-		Steps: steps,
+		Steps: stepsArr,
 	}, nil
 }

@@ -43,7 +43,8 @@ func ServerCommands() []*cli.Command {
 			// Initialize services
 			coreServices := services.InitServices(db, logger, frameworkConfig)
 
-			InitComponents(coreServices, frameworkConfig, logger)
+			components := InitComponents(coreServices, frameworkConfig, logger)
+			api.New(coreServices, components, frameworkConfig, logger)
 			return nil
 		},
 	}
@@ -58,6 +59,5 @@ func InitComponents(coreServices *services.Services, frameworkConfig *config.Con
 	components := &api.AppComponents{
 		TemplatingManager: templating.New(frameworkConfig, coreServices, logger),
 	}
-	api.New(coreServices, components, frameworkConfig, logger)
 	return components
 }

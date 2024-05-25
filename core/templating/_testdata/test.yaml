@@ -3,10 +3,11 @@ meta:
   type: Enumeration
   remediation: Do something
 
-http:
-  method: POST
-  url: someurl
-  path: test
-  matcher:
-    - body:
-        regex: hi
+steps:
+  http:
+    method: POST
+    url: someurl
+    path: test
+    matcher:
+      - body:
+          regex: hi

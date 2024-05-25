@@ -21,6 +21,6 @@ func New(cfg *config.Config, services *services.Services, logger *zap.Logger) IT
 	logger.Info("Templating service started")
 	return &TemplatingManager{
 		coreServices:   services,
-		PluginsManager: pluginsManager,
+		pluginsManager: pluginsManager,
 	}
 }

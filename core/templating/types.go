@@ -7,7 +7,7 @@ import (
 
 type TemplatingManager struct {
 	coreServices   *services.Services
-	PluginsManager plugins.IPluginManager
+	pluginsManager plugins.IPluginManager
 }
 
 type ITemplateManager interface {
