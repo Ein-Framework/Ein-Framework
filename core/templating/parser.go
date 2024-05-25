@@ -51,7 +51,7 @@ func parseTemplateContent(data interface{}) (*TemplateData, error) {
 		return nil, err
 	}
 
-	steps := make([]TemplateSteps, len(json))
+	steps := make([]TemplateSteps, len(json)-1)
 	i := 0
 	for k := range json {
 		if k == "meta" {

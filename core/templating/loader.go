@@ -35,6 +35,5 @@ func (manager *TemplatingManager) ReadTemplate(templatePath string) *TemplateDat
 	if err != nil {
 		log.Panicf(err.Error())
 	}
-
 	return templateData
 }

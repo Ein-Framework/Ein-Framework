@@ -9,6 +9,7 @@ import (
 	"github.com/Ein-Framework/Ein-Framework/core/services"
 	"github.com/Ein-Framework/Ein-Framework/pkg/config"
 	"github.com/Ein-Framework/Ein-Framework/pkg/log"
+	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -51,5 +52,7 @@ func TestLoadTemplateFile(t *testing.T) {
 	manager := CreateManagerService(t, config)
 
 	template := manager.ReadTemplate(path.Join(config.TemplatesDir, "test.yaml"))
-	t.Log(template)
+
+	assert.Equal(t, len(template.Steps), 1, "There should be 1 step only")
+	assert.Equal(t, template.Steps[0].Protocol, "http", "Protocol don't match")
 }
