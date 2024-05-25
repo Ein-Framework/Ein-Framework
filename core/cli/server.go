@@ -1,7 +1,11 @@
 package cli
 
 import (
+	"fmt"
+
 	"github.com/Ein-Framework/Ein-Framework/core/api"
+	"github.com/Ein-Framework/Ein-Framework/core/domain"
+	"github.com/Ein-Framework/Ein-Framework/core/services"
 	"github.com/Ein-Framework/Ein-Framework/pkg/config"
 	"github.com/Ein-Framework/Ein-Framework/pkg/log"
 	"github.com/urfave/cli/v2"
@@ -28,7 +32,18 @@ func ServerCommands() []*cli.Command {
 				return nil
 			}
 
-			api.New(frameworkConfig, logger)
+			db, err := domain.NewDatabase(frameworkConfig.Database)
+
+			if err != nil {
+				log.Fatal(err.Error())
+			}
+
+			fmt.Println(db)
+
+			// Initialize services
+			coreServices := services.InitServices(db, logger, frameworkConfig)
+
+			api.New(coreServices, frameworkConfig, logger)
 			return nil
 		},
 	}
