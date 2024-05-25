@@ -1,0 +1,5 @@
+package templating
+
+func New() {
+
+}

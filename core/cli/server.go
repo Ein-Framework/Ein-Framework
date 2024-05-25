@@ -28,8 +28,7 @@ func ServerCommands() []*cli.Command {
 				return nil
 			}
 
-			api.New(*frameworkConfig,logger)
-
+			api.New(frameworkConfig, logger)
 			return nil
 		},
 	}

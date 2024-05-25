@@ -15,7 +15,7 @@ import (
 type ApiService struct {
 }
 
-func New(config config.Config, logger *zap.Logger) {
+func New(config *config.Config, logger *zap.Logger) {
 	e := echo.New()
 
 	// Middleware
@@ -31,8 +31,8 @@ func New(config config.Config, logger *zap.Logger) {
 	fmt.Println(db)
 
 	// Initialize services
-	// assessmentService := services.NewAssessmentService(
-	// 	services.BuildContext(db, logger))
+	// coreServices := services.InitServices(db, logger, config)
+
 	// assessmentHandler := handlers.NewAssessmentHandler(assessmentService)
 
 	// e.PUT("/assessments/:id", assessmentHandler.UpdateAssessment)
