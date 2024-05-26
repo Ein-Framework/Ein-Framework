@@ -12,6 +12,7 @@ type TemplatingManager struct {
 
 type ITemplateManager interface {
 	ReadTemplate(templatePath string) *TemplateData
+	CanTemplateExecute(templatePath string) (bool, string)
 }
 
 type TemplateData struct {
