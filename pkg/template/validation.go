@@ -3,6 +3,8 @@ package template
 import (
 	"errors"
 	"fmt"
+	"slices"
+	"strings"
 )
 
 func KeyExists(key string) TemplateValidationRule {
@@ -32,6 +34,27 @@ func KeyExistsValueString(key string) TemplateValidationRule {
 			return nil, fmt.Errorf("key '%s' exists but is not string", key)
 		}
 
+		return str, nil
+	}
+}
+
+func KeyExistsValueEnumString(key string, values []string) TemplateValidationRule {
+	existsValidator := KeyExists(key)
+	return func(data interface{}) (interface{}, error) {
+		obj, err := existsValidator(data)
+		if err != nil {
+			return nil, err
+		}
+
+		str, ok := obj.(string)
+		if !ok {
+			return nil, fmt.Errorf("key '%s' exists but is not string", key)
+		}
+
+		ok = slices.Contains(values, str)
+		if !ok {
+			return nil, fmt.Errorf("key '%s' exists but is not allowed. allowed values are: %s", key, strings.Join(values, ", "))
+		}
 		return str, nil
 	}
 }
