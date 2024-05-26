@@ -11,7 +11,6 @@ type AssessmentService struct {
 }
 
 func NewAssessmentService(ctx Context) *AssessmentService {
-
 	repo := repository.NewGormRepository(ctx.OrmConnection.Db, ctx.Logger.Sugar())
 	return &AssessmentService{
 		Service{

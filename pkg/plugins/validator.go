@@ -8,6 +8,9 @@ import (
 
 func validatePlugin(pluginInstance IPlugin) {
 	meta := pluginInstance.MetaInfo()
+	if pluginInstance.Info().Protocol == "" {
+		pParseError("[-] error: plugin protocol is missing")
+	}
 
 	checkPluginType(meta.Type)
 }
