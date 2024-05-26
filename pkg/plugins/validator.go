@@ -7,12 +7,12 @@ import (
 )
 
 func validatePlugin(pluginInstance IPlugin) {
-	meta := pluginInstance.MetaInfo()
+	// meta := pluginInstance.MetaInfo()
 	if pluginInstance.Info().Protocol == "" {
 		pParseError("[-] error: plugin protocol is missing")
 	}
 
-	checkPluginType(meta.Type)
+	// checkPluginType(meta.Type)
 }
 
 func validateLibraryPath(libraryPath string) error {
@@ -31,11 +31,11 @@ func validateLibraryPath(libraryPath string) error {
 	return nil
 }
 
-func checkPluginType(pluginType PluginType) {
-	if pluginType <= UndefinedType || pluginType >= UndefinedType {
-		pParseError("[-] error: Invalid Login Type")
-	}
-}
+// func checkPluginType(pluginType PluginType) {
+// 	if pluginType <= UndefinedType || pluginType >= UndefinedType {
+// 		pParseError("[-] error: Invalid Login Type")
+// 	}
+// }
 
 func pParseError(errorMessage string) {
 	log.Panicln("[-] error: Failed to parse", errorMessage)

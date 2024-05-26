@@ -9,16 +9,19 @@ Returns whether or not a template can be executed.
 
 If false, it'll return the protocol causing it to fail.
 */
-func (manager *TemplatingManager) CanTemplateExecute(templatePath string) (bool, string) {
-	template := manager.ReadTemplate(templatePath)
+func (manager *TemplatingManager) CanTemplateExecute(templatePath string) (bool, error) {
+	template, err := manager.ReadTemplate(templatePath)
+	if err != nil {
+		return false, err
+	}
 
 	for _, step := range template.Steps {
 		_, err := manager.pluginsManager.GetPluginByProtocol(step.Protocol)
 		if err != nil {
-			return false, step.Protocol
+			return false, fmt.Errorf("unknown protocol: '%s'", step.Protocol)
 		}
 	}
-	return true, ""
+	return true, nil
 }
 
 /*
@@ -27,7 +30,10 @@ Execute the given template.
 TODO(M0ngi): Handle results
 */
 func (manager *TemplatingManager) ExecuteTemplate(templatePath string, params ...interface{}) (interface{}, error) {
-	template := manager.ReadTemplate(templatePath)
+	template, err := manager.ReadTemplate(templatePath)
+	if err != nil {
+		return nil, err
+	}
 
 	for _, step := range template.Steps {
 		loadedPlugin, err := manager.pluginsManager.GetPluginByProtocol(step.Protocol)
