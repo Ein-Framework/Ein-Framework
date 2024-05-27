@@ -10,7 +10,7 @@ type TemplatingManager struct {
 	coreServices    *services.Services
 	pluginsManager  plugins.IPluginManager
 	config          *config.Config
-	loadedTemplates []*TemplateData
+	loadedTemplates map[string]*TemplateData
 }
 
 type ITemplateManager interface {

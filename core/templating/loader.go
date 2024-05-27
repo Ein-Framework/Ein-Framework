@@ -83,7 +83,7 @@ func (manager *TemplatingManager) LoadTemplate(templateFile string) error {
 		return err
 	}
 
-	manager.loadedTemplates = append(manager.loadedTemplates, template)
+	manager.loadedTemplates[templateFile] = template
 	return nil
 }
 
@@ -97,4 +97,17 @@ func (manager *TemplatingManager) LoadAllTemplates() error {
 		manager.LoadTemplate(template)
 	}
 	return nil
+}
+
+func (manager *TemplatingManager) GetAllTemplatesOfType(typ TemplateType) map[string]*TemplateData {
+	res := make(map[string]*TemplateData)
+	for key, value := range manager.loadedTemplates {
+		if value.Meta.Type != typ {
+			continue
+		}
+
+		res[key] = value
+	}
+
+	return res
 }
