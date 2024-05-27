@@ -1,48 +1,51 @@
 package templating
 
 import (
+	"errors"
 	"fmt"
 )
 
 /*
 Returns whether or not a template can be executed.
-
-If false, it'll return the protocol causing it to fail.
 */
-func (manager *TemplatingManager) CanTemplateExecute(templatePath string) (bool, error) {
-	template, err := manager.ReadTemplate(templatePath)
-	if err != nil {
-		return false, err
+func (manager *TemplatingManager) CanTemplateExecute(templatePath string) error {
+	template, ok := manager.loadedTemplates[templatePath]
+	if !ok {
+		return errors.New("template not loaded")
 	}
 
 	for _, step := range template.Steps {
 		_, err := manager.pluginsManager.GetPluginByProtocol(step.Protocol)
 		if err != nil {
-			return false, fmt.Errorf("unknown protocol: '%s'", step.Protocol)
+			return fmt.Errorf("unknown protocol: '%s'", step.Protocol)
 		}
 	}
-	return true, nil
+	return nil
 }
 
 /*
 Execute the given template.
 
-TODO(M0ngi): Handle results
+Calls CanTemplateExecute before execution.
 */
-func (manager *TemplatingManager) ExecuteTemplate(templatePath string, params ...interface{}) (interface{}, error) {
-	template, err := manager.ReadTemplate(templatePath)
+func (manager *TemplatingManager) ExecuteTemplate(templatePath string, executionContext ...interface{}) ([]TemplateExecutionResultType, error) {
+	err := manager.CanTemplateExecute(templatePath)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, step := range template.Steps {
-		loadedPlugin, err := manager.pluginsManager.GetPluginByProtocol(step.Protocol)
-		if err != nil {
-			return nil, fmt.Errorf("unable to execute template '%s', missing plugin for protocol '%s'", templatePath, step.Protocol)
-		}
+	template := manager.loadedTemplates[templatePath]
+	results := make([]TemplateExecutionResultType, len(template.Steps))
 
-		// TODO(M0ngi): Handle plugin execution results
-		loadedPlugin.Plugin.Execute(params)
+	for idx, step := range template.Steps {
+		loadedPlugin, _ := manager.pluginsManager.GetPluginByProtocol(step.Protocol)
+
+		execRes := loadedPlugin.Plugin.Execute(executionContext)
+		res, ok := execRes.(TemplateExecutionResultType)
+		if !ok {
+			return nil, fmt.Errorf("unable to parse template '%s' results for protocol '%s'", templatePath, step.Protocol)
+		}
+		results[idx] = res
 	}
-	return nil, nil
+	return results, nil
 }

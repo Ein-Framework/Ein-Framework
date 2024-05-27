@@ -1,6 +1,7 @@
 package templating
 
 import (
+	"github.com/Ein-Framework/Ein-Framework/core/domain/entity"
 	"github.com/Ein-Framework/Ein-Framework/core/services"
 	"github.com/Ein-Framework/Ein-Framework/pkg/config"
 	"github.com/Ein-Framework/Ein-Framework/pkg/plugins"
@@ -15,8 +16,8 @@ type TemplatingManager struct {
 
 type ITemplateManager interface {
 	ReadTemplate(templatePath string) (*TemplateData, error)
-	CanTemplateExecute(templatePath string) (bool, error)
-	ExecuteTemplate(templatePath string, params ...interface{}) (interface{}, error)
+	CanTemplateExecute(templatePath string) error
+	ExecuteTemplate(templatePath string, params ...interface{}) ([]TemplateExecutionResultType, error)
 	ListAllTemplates() ([]string, error)
 }
 
@@ -45,4 +46,11 @@ type TemplateMeta struct {
 type TemplateSteps struct {
 	Protocol string
 	Data     map[string]interface{}
+}
+
+type TemplateExecutionResultType struct {
+	Response  string
+	MetaData  map[string]string
+	NewAssets []entity.Asset
+	Alerts    []entity.Alert
 }
