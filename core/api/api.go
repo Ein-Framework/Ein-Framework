@@ -17,12 +17,21 @@ func New(coreServices *services.Services, components *AppComponents, config *con
 	e := echo.New()
 
 	// Middleware
+
+	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	// assessmentHandler := handlers.NewAssessmentHandler(assessmentService)
+	assessmentHandler := handlers.NewAssessmentHandler(coreServices.AssessmentService)
 
 	serviceManager := apiservicemanager.NewServiceManager(e)
+	api := e.Group("/api")
+	api.GET("/assessments", assessmentHandler.ListAssesments)
+	api.GET("/assessments/:id", assessmentHandler.GetAssessmentById)
+	api.POST("/assessments", assessmentHandler.CreateAssessment)
+	api.POST("/assessments/url", assessmentHandler.AddNewAssessmentFromURL)
+	api.PUT("/assessment/:id", assessmentHandler.UpdateAssessment)
+	api.DELETE("/assessment/:id", assessmentHandler.DeleteAssessment)
 
 	templatingService, err := serviceManager.NewService("templating")
 	if err != nil {

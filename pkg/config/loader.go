@@ -2,9 +2,9 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 
 	"gopkg.in/yaml.v3"
 )
@@ -28,16 +28,10 @@ func GetConfig() (*Config, error) {
 }
 
 func parseConfig() (*Config, error) {
-	userHomeDir, err := os.UserHomeDir()
 
+	config, err := ParseConfigFromFile(DefaultPath())
 	if err != nil {
-		log.Panicln("[-] error: Unable to retrieve user home directory")
-	}
-
-	configFilePath := filepath.Join(userHomeDir, DefaultPath())
-
-	config, err := ParseConfigFromFile(configFilePath)
-	if err != nil {
+		fmt.Println(err.Error())
 
 		return nil, err
 	}

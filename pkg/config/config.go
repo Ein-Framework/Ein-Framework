@@ -18,20 +18,36 @@ type DatabaseConfig struct {
 	Name     string `yaml:"name"`
 }
 
-type Config struct {
-	FrameworkRoot string         `yaml:"framework_root"`
-	PluginsDir    string         `yaml:"plugins_path"`
-	TemplatesDir  string         `yaml:"template_path"`
-	Database      DatabaseConfig `yaml:"database"`
+type HackeroneCreds struct {
+	H1Username string `yaml:"username"`
+	H1ApiKey   string `yaml:"api_key"`
+}
 
-	ClientPort     int    `yaml:"client_port"`
-	ServerHTTPPort int    `yaml:"server_http_port"`
-	Host           string `yaml:"host"`
-	SecretToken    string `yaml:"secret_token"`
+type IntegrityCreds struct {
+	APiKey string `yaml:"api_key"`
+}
+
+type Integration struct {
+	HackeroneCreds HackeroneCreds `yaml:"hackerone"`
+	IntegrityCreds IntegrityCreds `yaml:"integrity"`
+}
+
+type Config struct {
+	FrameworkRoot  string         `yaml:"framework_root"`
+	PluginsDir     string         `yaml:"plugins_path"`
+	TemplatesDir   string         `yaml:"template_path"`
+	Database       DatabaseConfig `yaml:"database"`
+	ClientPort     int            `yaml:"client_port"`
+	ServerHTTPPort int            `yaml:"server_http_port"`
+	Host           string         `yaml:"host"`
+	SecretToken    string         `yaml:"secret_token"`
+
+	Integration Integration `yaml:"integration"`
 }
 
 func DefaultPath() string {
-	return filepath.Join(defaultDir, defaultFile)
+	home, _ := os.UserHomeDir()
+	return filepath.Join(home, defaultDir, defaultFile)
 }
 
 func CreateDefaultConfig() *Config {

@@ -1,55 +1,79 @@
 package handlers
 
 import (
-	"strconv"
+	"fmt"
 
 	"github.com/Ein-Framework/Ein-Framework/core/api/dtos"
+	"github.com/Ein-Framework/Ein-Framework/core/api/dtos/requests"
 	"github.com/Ein-Framework/Ein-Framework/core/domain/entity"
 	"github.com/Ein-Framework/Ein-Framework/core/services"
 	"github.com/labstack/echo/v4"
 )
 
 type AssessmentHandler struct {
-	assessmentService *services.AssessmentService
+	assessmentService services.IAssessmentService
 }
 
-type AssessmentRequest struct {
-	Name           string                `json:"name"`
-	AssessmentType entity.AssessmentType `json:"assessmentType"`
-	Scope          entity.Scope          `json:"scope"`
-}
-
-func NewAssessmentHandler(assessmentService *services.AssessmentService) *AssessmentHandler {
+func NewAssessmentHandler(assessmentService services.IAssessmentService) *AssessmentHandler {
 	return &AssessmentHandler{
 		assessmentService: assessmentService,
 	}
 }
 
+func (h *AssessmentHandler) ListAssesments(c echo.Context) error {
+
+	assessments, err := h.assessmentService.GetAllAssessments()
+	fmt.Println(assessments)
+
+	if err != nil {
+		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
+	}
+
+	return c.JSON(200, assessments)
+}
+
+func (h *AssessmentHandler) GetAssessmentById(c echo.Context) error {
+
+	var req requests.IdParam
+
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(400, dtos.ErrorResponseMsg("Missing Id"))
+	}
+
+	assessment, err := h.assessmentService.GetAssessmentById(req.Id)
+	if err != nil {
+		return c.JSON(404, dtos.ErrorResponseMsg("Assessment not found"))
+	}
+
+	return c.JSON(200, assessment)
+}
+
 func (h *AssessmentHandler) CreateAssessment(c echo.Context) error {
-	req := &AssessmentRequest{}
+
+	req := &requests.AssessmentRequest{}
+
 	if err := c.Bind(req); err != nil {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
 	_, err := h.assessmentService.AddNewAssessment(req.Name, req.AssessmentType, req.Scope)
+
 	if err != nil {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
-	return c.JSON(200, map[string]interface{}{
-		"message": "Assessment created successfully",
-	})
+	return c.JSON(200, dtos.InfoMsgResponse("Assessment created successfully"))
 }
 
 func (h *AssessmentHandler) DeleteAssessment(c echo.Context) error {
-	id := c.Param("id")
+	req := &requests.IdParam{}
+	var err error
 
-	uid, err := strconv.ParseUint(id, 10, 32)
-	if err != nil {
+	if err = c.Bind(req); err != nil {
 		return c.JSON(400, dtos.ErrorResponseMsg("Bad Id"))
 
 	}
-	err = h.assessmentService.DeleteAssessment(uint(uid))
+	err = h.assessmentService.DeleteAssessment(req.Id)
 	if err != nil {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
@@ -58,9 +82,9 @@ func (h *AssessmentHandler) DeleteAssessment(c echo.Context) error {
 }
 
 func (h *AssessmentHandler) UpdateAssessment(c echo.Context) error {
-	id := c.Param("id")
 
-	req := &AssessmentRequest{}
+	var err error
+	req := &requests.AssessmentRequest{}
 
 	if err := c.Bind(req); err != nil {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
@@ -72,16 +96,35 @@ func (h *AssessmentHandler) UpdateAssessment(c echo.Context) error {
 		Scope: req.Scope,
 		// ... other fields
 	}
-	uid, err := strconv.ParseUint(id, 10, 32)
-	if err != nil {
-		return c.JSON(400, dtos.ErrorResponseMsg("Bad Id"))
 
-	}
-
-	err = h.assessmentService.UpdateAssessment(uint(uid), updatedAssessment)
-	if err != nil {
+	if err = h.assessmentService.UpdateAssessment(req.Id, updatedAssessment); err != nil {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
-	return c.JSON(200, dtos.InfoMsgResponse("Assessment updated successfully"))
+	return c.JSON(200, updatedAssessment)
+}
+
+func (h *AssessmentHandler) AddNewAssessmentFromURL(c echo.Context) error {
+
+	req := requests.CreateAssessmentFromURL{}
+	var err error
+	if err := c.Bind(&req); err != nil {
+		fmt.Print(err.Error())
+		return c.JSON(400, dtos.ErrorResponseMsg("Bad Request"))
+	}
+
+	var assessment *entity.Assessment
+
+	switch req.Platform {
+	case "hackerone":
+		assessment, err = h.assessmentService.AddNewAssessmentFromHackerone(req.ProgramName)
+		if err != nil {
+			fmt.Println(err.Error())
+			return c.JSON(500, dtos.ErrorResponseMsg("Error creating assessment"))
+		}
+		return c.JSON(201, assessment)
+
+	default:
+		return c.JSON(400, dtos.ErrorResponseMsg("Unsupported Platform"))
+	}
 }

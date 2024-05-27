@@ -22,6 +22,8 @@ type Asset struct {
 type Vulnerability struct {
 	gorm.Model
 	Description string `json:"description"`
+	ExternalID  string `json:"external_id"`
+	Name        string `json:"name"`
 }
 
 type Scope struct {
