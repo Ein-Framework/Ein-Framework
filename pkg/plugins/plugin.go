@@ -1,10 +1,6 @@
 // Package plugins defines how to load and interact with the framework plugins.
 package plugins
 
-import (
-	"github.com/Ein-Framework/Ein-Framework/core/domain/entity"
-)
-
 // Metadata Type describes the metadata of the plugin
 // Version is the current version of the plugin
 type Metadata struct {
@@ -37,7 +33,7 @@ type IPlugin interface {
 	MetaInfo() *Metadata
 	Info() *PluginInfo
 	Options() map[string]string
-	Execute(...interface{}) []entity.Alert
+	Execute(...interface{}) interface{}
 	SetArgs(map[string]interface{}) error
 	IsWaitingForTaskResult() (bool, string)
 }
