@@ -1,8 +1,12 @@
 package templating
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"text/template"
+
+	"gopkg.in/yaml.v3"
 )
 
 /*
@@ -28,7 +32,7 @@ Execute the given template.
 
 Calls CanTemplateExecute before execution.
 */
-func (manager *TemplatingManager) ExecuteTemplate(templatePath string, executionContext ...interface{}) ([]TemplateExecutionResultType, error) {
+func (manager *TemplatingManager) ExecuteTemplate(templatePath string, executionContext map[string]interface{}) ([]TemplateExecutionResultType, error) {
 	err := manager.CanTemplateExecute(templatePath)
 	if err != nil {
 		return nil, err
@@ -40,12 +44,48 @@ func (manager *TemplatingManager) ExecuteTemplate(templatePath string, execution
 	for idx, step := range template.Steps {
 		loadedPlugin, _ := manager.pluginsManager.GetPluginByProtocol(step.Protocol)
 
-		execRes := loadedPlugin.Plugin.Execute(executionContext)
+		// step.Data -> string -> replace vars -> map
+		newStep, err := step.applyExecutionContext(executionContext)
+		if err != nil {
+			return nil, err
+		}
+
+		execRes := loadedPlugin.Plugin.Execute(newStep.Data)
 		res, ok := execRes.(TemplateExecutionResultType)
 		if !ok {
 			return nil, fmt.Errorf("unable to parse template '%s' results for protocol '%s'", templatePath, step.Protocol)
 		}
+		// extend executionContext
 		results[idx] = res
 	}
 	return results, nil
+}
+
+func (step *TemplateStep) applyExecutionContext(context map[string]interface{}) (*TemplateStep, error) {
+	toParse, err := yaml.Marshal(step.Data)
+	if err != nil {
+		return nil, fmt.Errorf("error (1) parsing protocol '%s' variables", step.Protocol)
+	}
+
+	temp, err := template.New(step.Protocol).Parse(string(toParse))
+	if err != nil {
+		return nil, fmt.Errorf("error (2) parsing protocol '%s' variables", step.Protocol)
+	}
+
+	var buff bytes.Buffer
+	err = temp.Execute(&buff, context)
+	if err != nil {
+		return nil, fmt.Errorf("error (3) parsing protocol '%s' variables", step.Protocol)
+	}
+
+	var parsedData map[string]interface{}
+	err = yaml.Unmarshal(buff.Bytes(), parsedData)
+	if err != nil {
+		return nil, fmt.Errorf("error (4) parsing protocol '%s' variables", step.Protocol)
+	}
+
+	return &TemplateStep{
+		Protocol: step.Protocol,
+		Data:     parsedData,
+	}, nil
 }

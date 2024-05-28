@@ -15,18 +15,18 @@ func stringToTemplateType(value string) TemplateType {
 	return t
 }
 
-func parseTemplateMeta(template map[string]interface{}) (*TemplateMeta, error) {
+func parseTemplateMeta(template map[string]interface{}) (TemplateMeta, error) {
 	meta := template["meta"].(map[string]interface{})
-	return &TemplateMeta{
+	return TemplateMeta{
 		Author: meta["author"].(string),
 		Type:   stringToTemplateType(meta["type"].(string)),
 	}, nil
 }
 
-func parseTemplateSteps(template map[string]interface{}) ([]TemplateSteps, error) {
+func parseTemplateSteps(template map[string]interface{}) ([]*TemplateStep, error) {
 	steps := template["steps"].(map[string]interface{})
 
-	stepsArr := make([]TemplateSteps, len(steps))
+	stepsArr := make([]*TemplateStep, len(steps))
 	i := 0
 	for k := range steps {
 		data, ok := steps[k].(map[string]interface{})
@@ -34,8 +34,10 @@ func parseTemplateSteps(template map[string]interface{}) ([]TemplateSteps, error
 			return nil, fmt.Errorf("unable to convert %s to map", k)
 		}
 
-		stepsArr[i].Protocol = k
-		stepsArr[i].Data = data
+		stepsArr[i] = &TemplateStep{
+			Protocol: k,
+			Data:     data,
+		}
 		i++
 	}
 	return stepsArr, nil

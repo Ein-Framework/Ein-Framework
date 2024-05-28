@@ -17,13 +17,13 @@ type TemplatingManager struct {
 type ITemplateManager interface {
 	ReadTemplate(templatePath string) (*TemplateData, error)
 	CanTemplateExecute(templatePath string) error
-	ExecuteTemplate(templatePath string, params ...interface{}) ([]TemplateExecutionResultType, error)
+	ExecuteTemplate(templatePath string, executionContext map[string]interface{}) ([]TemplateExecutionResultType, error)
 	ListAllTemplates() ([]string, error)
 }
 
 type TemplateData struct {
-	Meta  *TemplateMeta `yaml:"meta"`
-	Steps []TemplateSteps
+	Meta  TemplateMeta `yaml:"meta"`
+	Steps []*TemplateStep
 }
 
 type TemplateType int
@@ -43,7 +43,7 @@ type TemplateMeta struct {
 	Type   TemplateType `yaml:"type"`
 }
 
-type TemplateSteps struct {
+type TemplateStep struct {
 	Protocol string
 	Data     map[string]interface{}
 }
