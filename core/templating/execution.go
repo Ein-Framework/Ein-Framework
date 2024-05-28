@@ -39,9 +39,9 @@ func (manager *TemplatingManager) ExecuteTemplate(templatePath string, execution
 	}
 
 	template := manager.loadedTemplates[templatePath]
-	results := make([]TemplateExecutionResultType, len(template.Steps))
+	results := make([]TemplateExecutionResultType, 0)
 
-	for idx, step := range template.Steps {
+	for _, step := range template.Steps {
 		loadedPlugin, _ := manager.pluginsManager.GetPluginByProtocol(step.Protocol)
 
 		// step.Data -> string -> replace vars -> map
@@ -51,12 +51,17 @@ func (manager *TemplatingManager) ExecuteTemplate(templatePath string, execution
 		}
 
 		execRes := loadedPlugin.Plugin.Execute(newStep.Data)
+		if execRes == nil {
+			// No result
+			continue
+		}
+
 		res, ok := execRes.(TemplateExecutionResultType)
 		if !ok {
 			return nil, fmt.Errorf("unable to parse template '%s' results for protocol '%s'", templatePath, step.Protocol)
 		}
 		// extend executionContext
-		results[idx] = res
+		results = append(results, res)
 	}
 	return results, nil
 }
