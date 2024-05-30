@@ -30,6 +30,8 @@ type Service struct {
 
 type Services struct {
 	AssessmentService IAssessmentService
+	JobService        IJobService
+	TaskService       ITaskService
 }
 
 type IAssessmentService interface {
@@ -37,4 +39,19 @@ type IAssessmentService interface {
 	DeleteAssessment(id uint) error
 	UpdateAssessment(id uint, updatedAssessment *entity.Assessment) error
 	GetAssessmentById(id uint) (*entity.Assessment, error)
+}
+type ITaskService interface {
+	AddNewTask(state entity.TaskState, output string, outputFormat entity.OutputFormat, args map[string]string, assessmentStageId uint) (*entity.Task, error)
+	DeleteTask(id uint) error
+	UpdateTask(id uint, updatedTask *entity.Task) error
+	GetTaskById(id uint) (*entity.Task, error)
+	GetAllTasks() ([]*entity.Task, error)
+}
+
+type IJobService interface {
+	AddNewJob(name string) (*entity.Job, error)
+	DeleteJob(id uint) error
+	UpdateJob(id uint, updatedJob *entity.Job) error
+	GetJobById(id uint) (*entity.Job, error)
+	GetAllJobs() ([]*entity.Job, error)
 }

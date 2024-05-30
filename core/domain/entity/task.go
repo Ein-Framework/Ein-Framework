@@ -35,8 +35,7 @@ const (
 type Job struct {
 	gorm.Model
 	// Type JobType `gorm:"type:text"`
-	Name  string
-	Tasks []Task `json:"tasks" gorm:"many2many:period_configuration_tasks;"`
+	Name string
 }
 
 type JobExecution struct {
@@ -44,6 +43,7 @@ type JobExecution struct {
 	Job          Job        `json:"periodConfiguration" gorm:"foreignkey:JobID;association_foreignkey:ID;"`
 	JobID        uint       `json:"-"`
 	AssessmentId uint       `json:"-"`
+	Tasks        []Task     `json:"tasks" gorm:"many2many:period_configuration_tasks;"`
 	Assessment   Assessment `json:"assessment" gorm:"foreignkey:AssessmentId;association_foreignkey:ID;"`
 }
 

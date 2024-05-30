@@ -11,5 +11,7 @@ func InitServices(db *domain.ORMConnection, logger *zap.Logger, config *config.C
 
 	return &Services{
 		AssessmentService: NewAssessmentService(context),
+		TaskService:       NewTaskService(context),
+		JobService:        NewJobService(context),
 	}
 }
