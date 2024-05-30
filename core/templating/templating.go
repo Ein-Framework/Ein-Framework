@@ -28,3 +28,7 @@ func New(cfg *config.Config, services *services.Services, logger *zap.Logger) IT
 	manager.LoadAllTemplates()
 	return manager
 }
+
+func (m *TemplatingManager) PluginManager() plugins.IPluginManager {
+	return m.pluginsManager
+}

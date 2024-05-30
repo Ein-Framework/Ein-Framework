@@ -29,8 +29,16 @@ func New(coreServices *services.Services, components *AppComponents, config *con
 		logger.Panic("failed to create templating error")
 	}
 
-	templatingHandler := handlers.New(components.TemplatingManager)
-	templatingHandler.SetupRoutes(*templatingService)
+	pluginService, err := serviceManager.NewService("plugin")
+	if err != nil {
+		logger.Panic("failed to create templating error")
+	}
+
+	templatingHandler := handlers.NewTemplatingHandler(components.TemplatingManager)
+	pluginHandler := handlers.NewPluginsHandler(components.TemplatingManager.PluginManager())
+
+	templatingHandler.SetupTemplatingRoutes(templatingService)
+	pluginHandler.SetupPluginRoutes(pluginService)
 
 	// e.PUT("/assessments/:id", assessmentHandler.UpdateAssessment)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", config.ServerHTTPPort)))

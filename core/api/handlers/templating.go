@@ -11,13 +11,13 @@ type TemplatingHandler struct {
 	templatingManager templating.ITemplateManager
 }
 
-func New(templatingManager templating.ITemplateManager) *TemplatingHandler {
+func NewTemplatingHandler(templatingManager templating.ITemplateManager) *TemplatingHandler {
 	return &TemplatingHandler{
 		templatingManager: templatingManager,
 	}
 }
 
-func (h *TemplatingHandler) SetupRoutes(service apiservicemanager.ApiService) {
+func (h *TemplatingHandler) SetupTemplatingRoutes(service *apiservicemanager.ApiService) {
 	service.GET("/", h.GetAllAvailableTemplates)
 	service.GET("/loaded", h.GetAllLoadedTemplates)
 

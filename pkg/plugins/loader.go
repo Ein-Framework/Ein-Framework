@@ -63,7 +63,7 @@ func (manager PluginManager) ListAllPlugins() ([]string, error) {
 	return plugins, nil
 }
 
-func (manager *PluginManager) UnloadPlugin(filePath string) error {
+func (manager PluginManager) UnloadPlugin(filePath string) error {
 	loadedPlugin, ok := manager.loadedPlugins[filePath]
 	if !ok {
 		return errors.New("plugin not loaded")

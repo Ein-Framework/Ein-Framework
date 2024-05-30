@@ -29,6 +29,8 @@ type ITemplateManager interface {
 	UnloadTemplate(templateFile string) error
 	LoadAllTemplates() error
 	UnloadAllTemplates() error
+
+	PluginManager() plugins.IPluginManager
 }
 
 type TemplateData struct {
