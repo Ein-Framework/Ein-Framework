@@ -3,7 +3,6 @@ package templating
 import (
 	"errors"
 	"os"
-	"strings"
 
 	"github.com/Ein-Framework/Ein-Framework/pkg/log"
 	"github.com/Ein-Framework/Ein-Framework/pkg/template"
@@ -50,33 +49,6 @@ func (manager *TemplatingManager) ReadTemplate(templatePath string) (*TemplateDa
 	return templateData, nil
 }
 
-func (manager *TemplatingManager) ListAllTemplates() ([]string, error) {
-	var (
-		templates []string
-	)
-
-	files, err := os.ReadDir(manager.config.TemplatesDir)
-	if os.IsNotExist(err) {
-		os.Mkdir(manager.config.TemplatesDir, os.ModePerm)
-		files, err = os.ReadDir(manager.config.TemplatesDir)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	for idx := range files {
-		file := files[idx]
-
-		if file.IsDir() || !strings.Contains(file.Name(), ".yaml") {
-			continue
-		}
-
-		templates = append(templates, file.Name())
-	}
-	return templates, nil
-}
-
 func (manager *TemplatingManager) LoadTemplate(templateFile string) error {
 	template, err := manager.ReadTemplate(templateFile)
 	if err != nil {
@@ -97,17 +69,4 @@ func (manager *TemplatingManager) LoadAllTemplates() error {
 		manager.LoadTemplate(template)
 	}
 	return nil
-}
-
-func (manager *TemplatingManager) GetAllTemplatesOfType(typ TemplateType) map[string]*TemplateData {
-	res := make(map[string]*TemplateData)
-	for key, value := range manager.loadedTemplates {
-		if value.Meta.Type != typ {
-			continue
-		}
-
-		res[key] = value
-	}
-
-	return res
 }

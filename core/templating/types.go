@@ -19,6 +19,8 @@ type ITemplateManager interface {
 	CanTemplateExecute(templatePath string) error
 	ExecuteTemplate(templatePath string, executionContext map[string]interface{}) ([]TemplateExecutionResultType, error)
 	ListAllTemplates() ([]string, error)
+	FindTemplatesForJob(jobId uint) []TemplateData
+	GetAllTemplatesOfType(typ TemplateType) map[string]*TemplateData
 }
 
 type TemplateData struct {
