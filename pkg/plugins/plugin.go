@@ -1,32 +1,15 @@
 // Package plugins defines how to load and interact with the framework plugins.
 package plugins
 
-import (
-	"github.com/Ein-Framework/Ein-Framework/core/domain/entity"
-)
-
-type PluginType int
-
-// To add a new type, make sure it's between `UnknownType` & `UndefinedType` (Used for validation)
-// `UnknownType` must always be 0, which is a default value for int type.
-const (
-	UnknownType    PluginType = iota
-	Recon                     // Enumeration phase
-	Exploiter                 // Scan for a vulnerability/exploit
-	ChangeDetector            // Watch for a change detection
-	UndefinedType
-)
-
 // Metadata Type describes the metadata of the plugin
 // Version is the current version of the plugin
 type Metadata struct {
-	Version     string     `json:"version"`
-	Author      string     `json:"author"`
-	Tags        []string   `json:"tags"`
-	ReleaseDate string     `json:"releaseDate"`
-	Type        PluginType `json:"type"`
-	SourceLink  string     `json:"sourceLink"`
-	Description string     `json:"description"`
+	Version     string   `json:"version"`
+	Author      string   `json:"author"`
+	Tags        []string `json:"tags"`
+	ReleaseDate string   `json:"releaseDate"`
+	SourceLink  string   `json:"sourceLink"`
+	Description string   `json:"description"`
 }
 
 // PluginInfo ReturnType returns the type of returned data, so we can parse it
@@ -50,7 +33,7 @@ type IPlugin interface {
 	MetaInfo() *Metadata
 	Info() *PluginInfo
 	Options() map[string]string
-	Execute(...interface{}) []entity.Alert
+	Execute(...interface{}) interface{}
 	SetArgs(map[string]interface{}) error
 	IsWaitingForTaskResult() (bool, string)
 }

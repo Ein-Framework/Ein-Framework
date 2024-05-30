@@ -22,5 +22,6 @@ func New(cfg *config.Config, services *services.Services, logger *zap.Logger) IT
 	return &TemplatingManager{
 		coreServices:   services,
 		pluginsManager: pluginsManager,
+		config:         cfg,
 	}
 }

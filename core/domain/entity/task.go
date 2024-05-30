@@ -25,22 +25,34 @@ const (
 	Queued   TaskState = "Queued"
 )
 
-type JobType string
+// type JobType string
 
-const (
-	Once     JobType = "once"
-	Periodic JobType = "periodic"
-)
+// const (
+// 	Once     JobType = "once"
+// 	Periodic JobType = "periodic"
+// )
 
 type Job struct {
 	gorm.Model
-	Type JobType `gorm:"type:text"`
-	Name string
+	// Type JobType `gorm:"type:text"`
+	Name  string
+	Tasks []Task `json:"tasks" gorm:"many2many:period_configuration_tasks;"`
+}
+
+type JobExecution struct {
+	gorm.Model
+	Job          Job        `json:"periodConfiguration" gorm:"foreignkey:JobID;association_foreignkey:ID;"`
+	JobID        uint       `json:"-"`
+	AssessmentId uint       `json:"-"`
+	Assessment   Assessment `json:"assessment" gorm:"foreignkey:AssessmentId;association_foreignkey:ID;"`
 }
 
 type PeriodConfiguration struct {
 	gorm.Model
-	Tasks []Task `json:"tasks" gorm:"many2many:period_configuration_tasks;"`
+	Month uint
+	Day   uint
+	Hour  uint
+	// Tasks []Task `json:"tasks" gorm:"many2many:period_configuration_tasks;"`
 }
 
 type CronJob struct {

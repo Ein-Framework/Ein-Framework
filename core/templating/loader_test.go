@@ -1,6 +1,7 @@
 package templating
 
 import (
+	"fmt"
 	"path"
 	"testing"
 
@@ -12,6 +13,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+)
+
+const (
+	TEMPLATE_TEST_FILE_NAME = "test.yaml"
 )
 
 func CreateConfig() *config.Config {
@@ -51,8 +56,29 @@ func TestLoadTemplateFile(t *testing.T) {
 	config := CreateConfig()
 	manager := CreateManagerService(t, config)
 
-	template := manager.ReadTemplate(path.Join(config.TemplatesDir, "test.yaml"))
+	template, err := manager.ReadTemplate(path.Join(config.TemplatesDir, "test.yaml"))
 
+	if err != nil {
+		return
+	}
+
+	assert.Equal(t, err, nil, "There should be no errors")
 	assert.Equal(t, len(template.Steps), 1, "There should be 1 step only")
-	assert.Equal(t, template.Steps[0].Protocol, "http", "Protocol don't match")
+	assert.Equal(t, template.Steps[0].Protocol, "http", "Expected protocol is http")
+}
+
+func TestListAllTemplates(t *testing.T) {
+	config := CreateConfig()
+	manager := CreateManagerService(t, config)
+
+	templates, err := manager.ListAllTemplates()
+
+	assert.Equal(t, err, nil, "There should be no errors")
+	if err != nil {
+		return
+	}
+
+	assert.Equal(t, len(templates), 1, "There should be 1 template only")
+	assert.Equal(t, templates[0], TEMPLATE_TEST_FILE_NAME)
+	fmt.Print(templates)
 }

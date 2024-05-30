@@ -1,6 +1,6 @@
 meta:
   author: "Test"
-  type: Enumeration
+  type: recon
   remediation: Do something
 
 steps:
