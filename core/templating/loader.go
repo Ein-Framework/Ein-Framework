@@ -3,6 +3,7 @@ package templating
 import (
 	"errors"
 	"os"
+	"path/filepath"
 
 	"github.com/Ein-Framework/Ein-Framework/pkg/log"
 	"github.com/Ein-Framework/Ein-Framework/pkg/template"
@@ -29,7 +30,7 @@ func (manager *TemplatingManager) parseTemplateFile(templatePath string) (interf
 }
 
 func (manager *TemplatingManager) ReadTemplate(templatePath string) (*TemplateData, error) {
-	template, err := manager.parseTemplateFile(templatePath)
+	template, err := manager.parseTemplateFile(filepath.Join(manager.config.TemplatesDir, templatePath))
 	if err != nil {
 		log.Error(err.Error())
 		return nil, err
@@ -59,14 +60,36 @@ func (manager *TemplatingManager) LoadTemplate(templateFile string) error {
 	return nil
 }
 
+func (manager *TemplatingManager) UnloadTemplate(templateFile string) error {
+	_, ok := manager.loadedTemplates[templateFile]
+	if !ok {
+		return errors.New("template must be loaded to unload it")
+	}
+	delete(manager.loadedTemplates, templateFile)
+	return nil
+}
+
 func (manager *TemplatingManager) LoadAllTemplates() error {
-	templates, err := manager.ListAllTemplates()
+	templates, err := manager.ListAllAvailableTemplates()
 	if err != nil {
 		return err
 	}
 
 	for _, template := range templates {
-		manager.LoadTemplate(template)
+		err := manager.LoadTemplate(template)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (manager *TemplatingManager) UnloadAllTemplates() error {
+	for k := range manager.loadedTemplates {
+		err := manager.UnloadTemplate(k)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

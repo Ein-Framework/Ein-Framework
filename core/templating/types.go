@@ -18,9 +18,17 @@ type ITemplateManager interface {
 	ReadTemplate(templatePath string) (*TemplateData, error)
 	CanTemplateExecute(templatePath string) error
 	ExecuteTemplate(templatePath string, executionContext map[string]interface{}) ([]TemplateExecutionResultType, error)
-	ListAllTemplates() ([]string, error)
+
+	GetAllLoadedTemplatesOfType(typ TemplateType) map[string]*TemplateData
+	GetAllLoadedTemplatesMeta() map[string]TemplateMeta
+
 	FindTemplatesForJob(jobId uint) []TemplateData
-	GetAllTemplatesOfType(typ TemplateType) map[string]*TemplateData
+	ListAllAvailableTemplates() ([]string, error)
+
+	LoadTemplate(templateFile string) error
+	UnloadTemplate(templateFile string) error
+	LoadAllTemplates() error
+	UnloadAllTemplates() error
 }
 
 type TemplateData struct {

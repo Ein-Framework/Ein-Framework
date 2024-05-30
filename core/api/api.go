@@ -3,7 +3,9 @@ package api
 import (
 	"fmt"
 
+	"github.com/Ein-Framework/Ein-Framework/core/api/handlers"
 	"github.com/Ein-Framework/Ein-Framework/core/services"
+	apiservicemanager "github.com/Ein-Framework/Ein-Framework/pkg/api_service_manager"
 	"github.com/Ein-Framework/Ein-Framework/pkg/config"
 	"go.uber.org/zap"
 
@@ -11,7 +13,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func New(coreServices *services.Services, components *AppComponents, config *config.Config, logger *zap.Logger) *ApiService {
+func New(coreServices *services.Services, components *AppComponents, config *config.Config, logger *zap.Logger) *ApiServer {
 	e := echo.New()
 
 	// Middleware
@@ -20,11 +22,20 @@ func New(coreServices *services.Services, components *AppComponents, config *con
 
 	// assessmentHandler := handlers.NewAssessmentHandler(assessmentService)
 
-	// e.PUT("/assessments/:id", assessmentHandler.UpdateAssessment)
+	serviceManager := apiservicemanager.NewServiceManager(e)
 
+	templatingService, err := serviceManager.NewService("templating")
+	if err != nil {
+		logger.Panic("failed to create templating error")
+	}
+
+	templatingHandler := handlers.New(components.TemplatingManager)
+	templatingHandler.SetupRoutes(*templatingService)
+
+	// e.PUT("/assessments/:id", assessmentHandler.UpdateAssessment)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", config.ServerHTTPPort)))
 
-	return &ApiService{
+	return &ApiServer{
 		server:     e,
 		components: components,
 	}

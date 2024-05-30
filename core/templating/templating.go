@@ -19,9 +19,12 @@ func New(cfg *config.Config, services *services.Services, logger *zap.Logger) IT
 	}
 
 	logger.Info("Templating service started")
-	return &TemplatingManager{
-		coreServices:   services,
-		pluginsManager: pluginsManager,
-		config:         cfg,
+	manager := &TemplatingManager{
+		coreServices:    services,
+		pluginsManager:  pluginsManager,
+		config:          cfg,
+		loadedTemplates: make(map[string]*TemplateData),
 	}
+	manager.LoadAllTemplates()
+	return manager
 }

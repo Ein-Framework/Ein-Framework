@@ -9,7 +9,7 @@ func (manager *TemplatingManager) FindTemplatesForJob(jobId uint) []TemplateData
 	return nil
 }
 
-func (manager *TemplatingManager) ListAllTemplates() ([]string, error) {
+func (manager *TemplatingManager) ListAllAvailableTemplates() ([]string, error) {
 	var (
 		templates []string
 	)
@@ -36,7 +36,7 @@ func (manager *TemplatingManager) ListAllTemplates() ([]string, error) {
 	return templates, nil
 }
 
-func (manager *TemplatingManager) GetAllTemplatesOfType(typ TemplateType) map[string]*TemplateData {
+func (manager *TemplatingManager) GetAllLoadedTemplatesOfType(typ TemplateType) map[string]*TemplateData {
 	res := make(map[string]*TemplateData)
 	for key, value := range manager.loadedTemplates {
 		if value.Meta.Type != typ {
@@ -47,4 +47,13 @@ func (manager *TemplatingManager) GetAllTemplatesOfType(typ TemplateType) map[st
 	}
 
 	return res
+}
+
+func (manager *TemplatingManager) GetAllLoadedTemplatesMeta() map[string]TemplateMeta {
+	templates := make(map[string]TemplateMeta)
+	for k, v := range manager.loadedTemplates {
+		templates[k] = v.Meta
+	}
+
+	return templates
 }

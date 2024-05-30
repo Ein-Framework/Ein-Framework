@@ -2,7 +2,6 @@ package templating
 
 import (
 	"fmt"
-	"path"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -52,11 +51,11 @@ func CreateManagerService(t *testing.T, config *config.Config) ITemplateManager 
 	return New(config, coreServices, logger)
 }
 
-func TestLoadTemplateFile(t *testing.T) {
+func TestReadTemplateFile(t *testing.T) {
 	config := CreateConfig()
 	manager := CreateManagerService(t, config)
 
-	template, err := manager.ReadTemplate(path.Join(config.TemplatesDir, "test.yaml"))
+	template, err := manager.ReadTemplate("test.yaml")
 
 	if err != nil {
 		return
@@ -71,7 +70,7 @@ func TestListAllTemplates(t *testing.T) {
 	config := CreateConfig()
 	manager := CreateManagerService(t, config)
 
-	templates, err := manager.ListAllTemplates()
+	templates, err := manager.ListAllAvailableTemplates()
 
 	assert.Equal(t, err, nil, "There should be no errors")
 	if err != nil {
