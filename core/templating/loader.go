@@ -9,6 +9,11 @@ import (
 	"github.com/Ein-Framework/Ein-Framework/pkg/template"
 )
 
+func (manager *TemplatingManager) isTemplateLoaded(templatePath string) bool {
+	_, ok := manager.loadedTemplates[templatePath]
+	return ok
+}
+
 func (manager *TemplatingManager) parseTemplateFile(templatePath string) (interface{}, error) {
 	f, err := os.ReadFile(templatePath)
 
@@ -50,19 +55,22 @@ func (manager *TemplatingManager) ReadTemplate(templatePath string) (*TemplateDa
 	return templateData, nil
 }
 
-func (manager *TemplatingManager) LoadTemplate(templateFile string) error {
+func (manager *TemplatingManager) LoadTemplate(templateFile string) (*TemplateData, error) {
+	if manager.isTemplateLoaded(templateFile) {
+		return nil, errors.New("template is already loaded")
+	}
+
 	template, err := manager.ReadTemplate(templateFile)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	manager.loadedTemplates[templateFile] = template
-	return nil
+	return template, nil
 }
 
 func (manager *TemplatingManager) UnloadTemplate(templateFile string) error {
-	_, ok := manager.loadedTemplates[templateFile]
-	if !ok {
+	if !manager.isTemplateLoaded(templateFile) {
 		return errors.New("template must be loaded to unload it")
 	}
 	delete(manager.loadedTemplates, templateFile)
@@ -76,7 +84,7 @@ func (manager *TemplatingManager) LoadAllTemplates() error {
 	}
 
 	for _, template := range templates {
-		err := manager.LoadTemplate(template)
+		_, err := manager.LoadTemplate(template)
 		if err != nil {
 			return err
 		}

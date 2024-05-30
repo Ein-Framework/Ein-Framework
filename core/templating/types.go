@@ -25,7 +25,7 @@ type ITemplateManager interface {
 	FindTemplatesForJob(jobId uint) []TemplateData
 	ListAllAvailableTemplates() ([]string, error)
 
-	LoadTemplate(templateFile string) error
+	LoadTemplate(templateFile string) (*TemplateData, error)
 	UnloadTemplate(templateFile string) error
 	LoadAllTemplates() error
 	UnloadAllTemplates() error

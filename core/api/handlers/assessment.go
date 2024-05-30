@@ -28,9 +28,7 @@ func NewAssessmentHandler(assessmentService *services.AssessmentService) *Assess
 func (h *AssessmentHandler) CreateAssessment(c echo.Context) error {
 	req := &AssessmentRequest{}
 	if err := c.Bind(req); err != nil {
-		return c.JSON(500, map[string]interface{}{
-			"error": err.Error(),
-		})
+		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
 	_, err := h.assessmentService.AddNewAssessment(req.Name, req.AssessmentType, req.Scope)
