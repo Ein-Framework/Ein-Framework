@@ -21,6 +21,7 @@ func (m *ServiceManager) NewService(path string) (*ApiService, error) {
 
 	service := &ApiService{
 		server: m.server,
+		group:  m.server.Group(path),
 		path:   path,
 	}
 	m.services[path] = service
