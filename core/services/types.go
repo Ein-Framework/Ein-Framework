@@ -29,9 +29,10 @@ type Service struct {
 }
 
 type Services struct {
-	AssessmentService IAssessmentService
-	JobService        IJobService
-	TaskService       ITaskService
+	AssessmentService   IAssessmentService
+	JobService          IJobService
+	TaskService         ITaskService
+	JobExecutionService IJobExecutionService
 }
 
 type IAssessmentService interface {
@@ -54,4 +55,13 @@ type IJobService interface {
 	UpdateJob(id uint, updatedJob *entity.Job) error
 	GetJobById(id uint) (*entity.Job, error)
 	GetAllJobs() ([]*entity.Job, error)
+}
+
+type IJobExecutionService interface {
+	AddNewJobExecution(jobID, assessmentID uint, tasks []entity.Task, status entity.TaskState) (*entity.JobExecution, error)
+	DeleteJobExecution(id uint) error
+	UpdateJobExecution(id uint, updatedJobExecution *entity.JobExecution) error
+	GetJobExecutionById(id uint) (*entity.JobExecution, error)
+	GetJobExecutionByJobId(id uint) ([]*entity.JobExecution, error)
+	GetAllJobExecutions() ([]*entity.JobExecution, error)
 }
