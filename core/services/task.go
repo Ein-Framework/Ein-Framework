@@ -23,16 +23,17 @@ func NewTaskService(ctx Context) *TaskService {
 	}
 }
 
-func (s *TaskService) AddNewTask(state entity.TaskState, output string, outputFormat entity.OutputFormat, args map[string]string, assessmentStageId uint) (*entity.Task, error) {
-	if state == "" || outputFormat == "" || assessmentStageId == 0 {
+func (s *TaskService) AddNewTask(state entity.TaskState, template entity.Template /* output string, outputFormat entity.OutputFormat, args map[string]string,*/, assessmentStageId uint) (*entity.Task, error) {
+	if state == "" || /* outputFormat == "" || */ assessmentStageId == 0 {
 		return nil, fmt.Errorf("invalid input: state, outputFormat, and assessmentStageId are required")
 	}
 
 	task := &entity.Task{
-		State:             state,
-		Output:            output,
-		OutputFormat:      outputFormat,
-		Args:              args,
+		State:    state,
+		Template: template,
+		//Output:            output,
+		//OutputFormat:      outputFormat,
+		//Args:              args,
 		AssessmentStageId: assessmentStageId,
 	}
 

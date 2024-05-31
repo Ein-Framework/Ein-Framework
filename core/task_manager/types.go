@@ -14,8 +14,8 @@ type TaskManager struct {
 }
 
 type ITaskManager interface {
-	ExecuteTemplate(TemplateID uint) (*entity.JobExecution, error)
-	ExecuteJob(jobID uint) (*entity.JobExecution, error)
+	ExecuteTemplate(Template entity.Template, AssesementID uint) (*entity.Task, error)
+	ExecuteJob(jobID uint, AssesementID uint) (*entity.JobExecution, error)
 	CancelJob(jobID uint) error
 	ViewJobStatus(jobID uint) (*entity.TaskState, error)
 }

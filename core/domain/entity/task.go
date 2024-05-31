@@ -65,7 +65,7 @@ type CronJob struct {
 
 type Task struct {
 	gorm.Model
-	// Template        Template
+	Template          Template
 	State             TaskState `gorm:"type:text"`
 	Output            string
 	OutputFormat      OutputFormat      `gorm:"type:text"`

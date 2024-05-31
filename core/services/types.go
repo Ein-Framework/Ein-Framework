@@ -42,7 +42,7 @@ type IAssessmentService interface {
 	GetAssessmentById(id uint) (*entity.Assessment, error)
 }
 type ITaskService interface {
-	AddNewTask(state entity.TaskState, output string, outputFormat entity.OutputFormat, args map[string]string, assessmentStageId uint) (*entity.Task, error)
+	AddNewTask(state entity.TaskState, template entity.Template /*output string, outputFormat entity.OutputFormat, args map[string]string, */, assessmentStageId uint) (*entity.Task, error)
 	DeleteTask(id uint) error
 	UpdateTask(id uint, updatedTask *entity.Task) error
 	GetTaskById(id uint) (*entity.Task, error)
