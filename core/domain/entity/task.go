@@ -35,7 +35,8 @@ const (
 type Job struct {
 	gorm.Model
 	// Type JobType `gorm:"type:text"`
-	Name string
+	Name      string
+	Templates []Template `gorm:"type:text[]"`
 }
 
 type JobExecution struct {
@@ -45,6 +46,7 @@ type JobExecution struct {
 	AssessmentId uint       `json:"-"`
 	Tasks        []Task     `json:"tasks" gorm:"many2many:period_configuration_tasks;"`
 	Assessment   Assessment `json:"assessment" gorm:"foreignkey:AssessmentId;association_foreignkey:ID;"`
+	Status       TaskState  `json:"status"`
 }
 
 type PeriodConfiguration struct {
