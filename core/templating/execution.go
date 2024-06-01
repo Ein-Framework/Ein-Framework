@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"text/template"
 
+	"github.com/Ein-Framework/Ein-Framework/core/domain/entity"
 	"gopkg.in/yaml.v3"
 )
 
@@ -32,14 +33,14 @@ Execute the given template.
 
 Calls CanTemplateExecute before execution.
 */
-func (manager *TemplatingManager) ExecuteTemplate(templatePath string, executionContext map[string]interface{}) ([]TemplateExecutionResultType, error) {
+func (manager *TemplatingManager) ExecuteTemplate(templatePath string, executionContext map[string]interface{}) ([]entity.TaskExecutionResultType, error) {
 	err := manager.CanTemplateExecute(templatePath)
 	if err != nil {
 		return nil, err
 	}
 
 	template := manager.loadedTemplates[templatePath]
-	results := make([]TemplateExecutionResultType, 0)
+	results := make([]entity.TaskExecutionResultType, 0)
 
 	for _, step := range template.Steps {
 		loadedPlugin, _ := manager.pluginsManager.GetPluginByProtocol(step.Protocol)
@@ -56,7 +57,7 @@ func (manager *TemplatingManager) ExecuteTemplate(templatePath string, execution
 			continue
 		}
 
-		res, ok := execRes.(TemplateExecutionResultType)
+		res, ok := execRes.(entity.TaskExecutionResultType)
 		if !ok {
 			return nil, fmt.Errorf("unable to parse template '%s' results for protocol '%s'", templatePath, step.Protocol)
 		}

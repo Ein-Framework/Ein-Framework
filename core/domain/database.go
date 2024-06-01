@@ -43,6 +43,8 @@ func NewDatabase(cfg config.DatabaseConfig) (*ORMConnection, error) {
 		&entity.Assessment{},
 		&entity.JobExecution{},
 		&entity.User{},
+		&entity.TaskExecutionResultType{},
+		&entity.HttpResponse{},
 	); err != nil {
 		log.LogError("[-] error: migrating database")
 		return nil, err

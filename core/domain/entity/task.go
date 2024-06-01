@@ -1,6 +1,10 @@
 package entity
 
 import (
+	"database/sql/driver"
+	"encoding/json"
+	"fmt"
+
 	"gorm.io/gorm"
 )
 
@@ -72,4 +76,39 @@ type Task struct {
 	Args              map[string]string `gorm:"type:text"`
 	AssessmentStageId uint              `json:"-"`
 	AssessmentStage   AssessmentStage   `json:"assessmentStage" gorm:"foreignkey:AssessmentStageId;association_foreignkey:ID;"`
+}
+
+type HttpResponse struct {
+	gorm.Model
+	ResponseBody    string
+	ResponseHeaders JSONMap
+}
+
+type TaskExecutionResultType struct {
+	gorm.Model
+	ResponseId       uint         `json:"-"`
+	Response         HttpResponse `json:"httpResponse" gorm:"foreignkey:ResponseId;association_foreignkey:ID;"`
+	MetaData         JSONMap
+	NewAssets        []Asset `json:"tasks" gorm:"many2many:task_execution_assets;"`
+	Alerts           []Alert `gorm:"foreignKey:TaskExecutionResultId"`
+	TaskOutputFormat OutputFormat
+	TaskOutput       string // For display
+	TaskId           uint   `json:"-"`
+	Task             Task   `json:"task" gorm:"foreignkey:TaskId;association_foreignkey:ID;"`
+}
+
+type JSONMap map[string]string
+
+func (j *JSONMap) Scan(value interface{}) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		return fmt.Errorf("failed to unmarshal JSONB value: %v", value)
+	}
+
+	return json.Unmarshal(bytes, j)
+}
+
+// Value implements the driver Valuer interface for JSONMap
+func (j JSONMap) Value() (driver.Value, error) {
+	return json.Marshal(j)
 }
