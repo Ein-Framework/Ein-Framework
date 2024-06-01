@@ -2,19 +2,7 @@ package queue
 
 import (
 	"errors"
-	"sync"
 )
-
-type Queue[T any] struct {
-	mu sync.Mutex
-	q  []*T
-}
-
-// FifoQueue
-type FifoQueue[T any] interface {
-	Insert(item *T) error
-	Remove() (*T, error)
-}
 
 // Insert inserts the item into the queue
 func (q *Queue[T]) Insert(item *T) error {
@@ -34,6 +22,18 @@ func (q *Queue[T]) Remove() (*T, error) {
 		return item, nil
 	}
 	return nil, errors.New("Queue is empty")
+}
+
+func (q *Queue[T]) RemoveIf(condition func(*T) bool) (*T, error) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	for idx, item := range q.q {
+		if condition(item) {
+			q.q = append(q.q[:idx], q.q[idx+1:]...)
+			return item, nil
+		}
+	}
+	return nil, errors.New("item not found")
 }
 
 // CreateQueue creates an empty queue
