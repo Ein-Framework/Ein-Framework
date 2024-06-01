@@ -52,6 +52,17 @@ func (s *TaskService) DeleteTask(id uint) error {
 	return nil
 }
 
+func (s *TaskService) DeleteTasks(tasks ...entity.Task) []error {
+	errs := make([]error, 0)
+	for _, task := range tasks {
+		err := s.DeleteTask(task.ID)
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+	return errs
+}
+
 func (s *TaskService) UpdateTask(id uint, updatedTask *entity.Task) error {
 	task, err := s.GetTaskById(id)
 	if err != nil {

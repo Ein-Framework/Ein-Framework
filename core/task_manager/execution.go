@@ -37,7 +37,7 @@ func (manager *TaskManager) ExecuteJob(jobID uint, AssesementID uint) (*entity.J
 	for _, template := range job.Templates {
 		task, err := manager.createTask(template, AssesementID)
 		if err != nil {
-			//TODO : yaaaaaaaaaaa mongi delete tasks
+			manager.coreServices.TaskService.DeleteTasks(tasks...)
 			return nil, err
 		}
 		tasks = append(tasks, *task)
@@ -45,7 +45,7 @@ func (manager *TaskManager) ExecuteJob(jobID uint, AssesementID uint) (*entity.J
 
 	jobExec, err := manager.coreServices.JobExecutionService.AddNewJobExecution(jobID, AssesementID, tasks, entity.Queued)
 	if err != nil {
-		//TODO : yaaaaaaaaaaa mongi delete tasks
+		manager.coreServices.TaskService.DeleteTasks(tasks...)
 		return nil, err
 	}
 	return jobExec, nil
