@@ -5,15 +5,11 @@ import (
 	"strings"
 )
 
-func (manager *TemplatingManager) FindTemplatesForJob(jobId uint) []TemplateData {
-	return nil
+func (manager *TemplatingManager) GetTemplatesForJob(jobId uint) ([]TemplateData, error) {
+	return nil, nil
 }
 
-func (manager *TemplatingManager) ListAllAvailableTemplates() ([]string, error) {
-	var (
-		templates []string
-	)
-
+func (manager *TemplatingManager) GetAllAvailableTemplates() ([]string, error) {
 	files, err := os.ReadDir(manager.config.TemplatesDir)
 	if os.IsNotExist(err) {
 		os.Mkdir(manager.config.TemplatesDir, os.ModePerm)
@@ -24,6 +20,7 @@ func (manager *TemplatingManager) ListAllAvailableTemplates() ([]string, error) 
 		return nil, err
 	}
 
+	templates := make([]string, 0)
 	for idx := range files {
 		file := files[idx]
 

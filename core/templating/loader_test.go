@@ -70,7 +70,7 @@ func TestListAllTemplates(t *testing.T) {
 	config := CreateConfig()
 	manager := CreateManagerService(t, config)
 
-	templates, err := manager.ListAllAvailableTemplates()
+	templates, err := manager.GetAllAvailableTemplates()
 
 	assert.Equal(t, err, nil, "There should be no errors")
 	if err != nil {

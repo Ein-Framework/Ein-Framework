@@ -22,8 +22,8 @@ type ITemplateManager interface {
 	GetAllLoadedTemplatesOfType(typ TemplateType) map[string]*TemplateData
 	GetAllLoadedTemplatesMeta() map[string]TemplateMeta
 
-	FindTemplatesForJob(jobId uint) []TemplateData
-	ListAllAvailableTemplates() ([]string, error)
+	GetTemplatesForJob(jobId uint) ([]TemplateData, error)
+	GetAllAvailableTemplates() ([]string, error)
 
 	LoadTemplate(templateFile string) (*TemplateData, error)
 	UnloadTemplate(templateFile string) error

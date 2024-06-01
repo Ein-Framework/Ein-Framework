@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"strconv"
+
 	"github.com/Ein-Framework/Ein-Framework/core/api/dtos"
 	"github.com/Ein-Framework/Ein-Framework/core/templating"
 	apiservicemanager "github.com/Ein-Framework/Ein-Framework/pkg/api_service_manager"
@@ -23,10 +25,28 @@ func (h *TemplatingHandler) SetupTemplatingRoutes(service *apiservicemanager.Api
 
 	service.POST("/load", h.LoadTemplate)
 	service.DELETE("/unload", h.UnloadTemplate)
+
+	service.GET("job/:id", h.GetJobTemplates)
+}
+
+func (h *TemplatingHandler) GetJobTemplates(c echo.Context) error {
+	id := c.Param("id")
+
+	uid64, err := strconv.ParseUint(id, 10, 32)
+	if err != nil {
+		return c.JSON(400, dtos.ErrorResponseMsg("Bad Id"))
+	}
+
+	templates, err := h.templatingManager.GetTemplatesForJob(uint(uid64))
+	if err != nil {
+		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
+	}
+
+	return c.JSON(200, dtos.SuccessDataMsgResponse(templates))
 }
 
 func (h *TemplatingHandler) GetAllAvailableTemplates(c echo.Context) error {
-	templates, err := h.templatingManager.ListAllAvailableTemplates()
+	templates, err := h.templatingManager.GetAllAvailableTemplates()
 	if err != nil {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}

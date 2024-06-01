@@ -78,7 +78,7 @@ func (manager *TemplatingManager) UnloadTemplate(templateFile string) error {
 }
 
 func (manager *TemplatingManager) LoadAllTemplates() error {
-	templates, err := manager.ListAllAvailableTemplates()
+	templates, err := manager.GetAllAvailableTemplates()
 	if err != nil {
 		return err
 	}
