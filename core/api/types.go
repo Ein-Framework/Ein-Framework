@@ -9,7 +9,7 @@ type AppComponents struct {
 	TemplatingManager templating.ITemplateManager
 }
 
-type ApiService struct {
+type ApiServer struct {
 	server     *echo.Echo
 	components *AppComponents
 }

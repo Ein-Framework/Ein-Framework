@@ -36,10 +36,6 @@ func (manager PluginManager) ListLoadedPlugins() []string {
 }
 
 func (manager PluginManager) ListAllPlugins() ([]string, error) {
-	var (
-		plugins []string
-	)
-
 	files, err := os.ReadDir(manager.config.PluginsDir)
 	if os.IsNotExist(err) {
 		os.Mkdir(manager.config.PluginsDir, os.ModePerm)
@@ -51,6 +47,7 @@ func (manager PluginManager) ListAllPlugins() ([]string, error) {
 		return nil, err
 	}
 
+	plugins := make([]string, 0)
 	for idx := range files {
 		file := files[idx]
 
@@ -63,7 +60,7 @@ func (manager PluginManager) ListAllPlugins() ([]string, error) {
 	return plugins, nil
 }
 
-func (manager *PluginManager) UnloadPlugin(filePath string) error {
+func (manager PluginManager) UnloadPlugin(filePath string) error {
 	loadedPlugin, ok := manager.loadedPlugins[filePath]
 	if !ok {
 		return errors.New("plugin not loaded")

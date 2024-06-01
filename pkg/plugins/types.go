@@ -14,6 +14,7 @@ type IPluginManager interface {
 	ListLoadedPlugins() []string
 	LoadAllPlugins() ([]*LoadedPluginInfo, error)
 	LoadPlugin(filePath string) (*LoadedPluginInfo, error)
+	UnloadPlugin(filePath string) error
 	GetPlugin(filePath string) (*LoadedPluginInfo, error)
 	GetPluginByProtocol(protocol string) (*LoadedPluginInfo, error)
 }

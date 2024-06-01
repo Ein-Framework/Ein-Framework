@@ -28,9 +28,7 @@ func NewAssessmentHandler(assessmentService *services.AssessmentService) *Assess
 func (h *AssessmentHandler) CreateAssessment(c echo.Context) error {
 	req := &AssessmentRequest{}
 	if err := c.Bind(req); err != nil {
-		return c.JSON(500, map[string]interface{}{
-			"error": err.Error(),
-		})
+		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
 	_, err := h.assessmentService.AddNewAssessment(req.Name, req.AssessmentType, req.Scope)
@@ -56,7 +54,7 @@ func (h *AssessmentHandler) DeleteAssessment(c echo.Context) error {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
-	return c.JSON(200, dtos.InfoMsgREsponse("Assessment deleted successfully"))
+	return c.JSON(200, dtos.InfoMsgResponse("Assessment deleted successfully"))
 }
 
 func (h *AssessmentHandler) UpdateAssessment(c echo.Context) error {
@@ -85,5 +83,5 @@ func (h *AssessmentHandler) UpdateAssessment(c echo.Context) error {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
-	return c.JSON(200, dtos.InfoMsgREsponse("Assessment updated successfully"))
+	return c.JSON(200, dtos.InfoMsgResponse("Assessment updated successfully"))
 }

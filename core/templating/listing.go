@@ -5,15 +5,11 @@ import (
 	"strings"
 )
 
-func (manager *TemplatingManager) FindTemplatesForJob(jobId uint) []TemplateData {
-	return nil
+func (manager *TemplatingManager) GetTemplatesForJob(jobId uint) ([]TemplateData, error) {
+	return nil, nil
 }
 
-func (manager *TemplatingManager) ListAllTemplates() ([]string, error) {
-	var (
-		templates []string
-	)
-
+func (manager *TemplatingManager) GetAllAvailableTemplates() ([]string, error) {
 	files, err := os.ReadDir(manager.config.TemplatesDir)
 	if os.IsNotExist(err) {
 		os.Mkdir(manager.config.TemplatesDir, os.ModePerm)
@@ -24,6 +20,7 @@ func (manager *TemplatingManager) ListAllTemplates() ([]string, error) {
 		return nil, err
 	}
 
+	templates := make([]string, 0)
 	for idx := range files {
 		file := files[idx]
 
@@ -36,7 +33,7 @@ func (manager *TemplatingManager) ListAllTemplates() ([]string, error) {
 	return templates, nil
 }
 
-func (manager *TemplatingManager) GetAllTemplatesOfType(typ TemplateType) map[string]*TemplateData {
+func (manager *TemplatingManager) GetAllLoadedTemplatesOfType(typ TemplateType) map[string]*TemplateData {
 	res := make(map[string]*TemplateData)
 	for key, value := range manager.loadedTemplates {
 		if value.Meta.Type != typ {
@@ -47,4 +44,13 @@ func (manager *TemplatingManager) GetAllTemplatesOfType(typ TemplateType) map[st
 	}
 
 	return res
+}
+
+func (manager *TemplatingManager) GetAllLoadedTemplatesMeta() map[string]TemplateMeta {
+	templates := make(map[string]TemplateMeta)
+	for k, v := range manager.loadedTemplates {
+		templates[k] = v.Meta
+	}
+
+	return templates
 }
