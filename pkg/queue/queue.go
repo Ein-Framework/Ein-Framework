@@ -4,6 +4,13 @@ import (
 	"errors"
 )
 
+// Length
+func (q *Queue[T]) Length() int {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	return len(q.q)
+}
+
 // Insert inserts the item into the queue
 func (q *Queue[T]) Insert(item *T) error {
 	q.mu.Lock()
@@ -22,6 +29,15 @@ func (q *Queue[T]) Remove() (*T, error) {
 		return item, nil
 	}
 	return nil, errors.New("Queue is empty")
+}
+
+// Empty
+func (q *Queue[T]) Empty() []*T {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	old := q.q
+	q.q = make([]*T, 0)
+	return old
 }
 
 func (q *Queue[T]) RemoveIf(condition func(*T) bool) (*T, error) {

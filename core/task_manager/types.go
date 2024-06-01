@@ -1,16 +1,18 @@
 package taskmanager
 
 import (
+	"sync"
+
 	"github.com/Ein-Framework/Ein-Framework/core/domain/entity"
 	"github.com/Ein-Framework/Ein-Framework/core/services"
 	"github.com/Ein-Framework/Ein-Framework/core/templating"
-	"github.com/Ein-Framework/Ein-Framework/pkg/queue"
 )
 
 type TaskManager struct {
 	templateManager templating.ITemplateManager
 	coreServices    *services.Services
-	q               queue.FifoQueue[entity.Task]
+	executions      map[uint]*ConcurrentExecution
+	executionsMutex sync.Mutex
 }
 
 type ITaskManager interface {
