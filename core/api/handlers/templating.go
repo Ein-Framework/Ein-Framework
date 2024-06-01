@@ -26,7 +26,7 @@ func (h *TemplatingHandler) SetupTemplatingRoutes(service *apiservicemanager.Api
 	service.POST("/load", h.LoadTemplate)
 	service.DELETE("/unload", h.UnloadTemplate)
 
-	service.GET("job/:id", h.GetJobTemplates)
+	service.GET("/job/:id", h.GetJobTemplates)
 }
 
 func (h *TemplatingHandler) GetJobTemplates(c echo.Context) error {

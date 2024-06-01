@@ -1,12 +1,14 @@
 package dtos
 
 type errorResponse struct {
-	Errors []string `json:"error"`
+	Message string
+	Errors  []string `json:"error"`
 }
 
 func ErrorResponseMsg(errors ...string) errorResponse {
 	return errorResponse{
-		Errors: errors,
+		Message: "error",
+		Errors:  errors,
 	}
 }
 
