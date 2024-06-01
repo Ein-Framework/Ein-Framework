@@ -73,9 +73,18 @@ func (s *JobExecutionService) GetJobExecutionById(id uint) (*entity.JobExecution
 	return &jobExecution, nil
 }
 
-func (s *JobExecutionService) GetJobExecutionByJobId(id uint) ([]*entity.JobExecution, error) {
+func (s *JobExecutionService) GetJobExecutionsByJobId(id uint) ([]*entity.JobExecution, error) {
 	var jobExecutions []*entity.JobExecution
 	if res := s.repo.DB().Where(&entity.JobExecution{JobID: id}).Find(&jobExecutions); res.Error != nil {
+		return nil, fmt.Errorf("job execution with ID %d not found: %w", id, res.Error)
+	}
+	return jobExecutions, nil
+}
+
+func (s *JobExecutionService) GetJobExecutionsNotCanceledByJobId(id uint) ([]*entity.JobExecution, error) {
+	var jobExecutions []*entity.JobExecution
+	db := s.repo.DB()
+	if res := db.Where(&entity.JobExecution{JobID: id}).Not(&entity.JobExecution{Status: entity.Canceled}).Find(&jobExecutions); res.Error != nil {
 		return nil, fmt.Errorf("job execution with ID %d not found: %w", id, res.Error)
 	}
 	return jobExecutions, nil

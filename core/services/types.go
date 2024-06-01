@@ -63,6 +63,7 @@ type IJobExecutionService interface {
 	DeleteJobExecution(id uint) error
 	UpdateJobExecution(id uint, updatedJobExecution *entity.JobExecution) error
 	GetJobExecutionById(id uint) (*entity.JobExecution, error)
-	GetJobExecutionByJobId(id uint) ([]*entity.JobExecution, error)
+	GetJobExecutionsByJobId(id uint) ([]*entity.JobExecution, error)
+	GetJobExecutionsNotCanceledByJobId(id uint) ([]*entity.JobExecution, error)
 	GetAllJobExecutions() ([]*entity.JobExecution, error)
 }
