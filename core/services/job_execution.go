@@ -13,7 +13,13 @@ type JobExecutionService struct {
 }
 
 func NewJobExecutionService(ctx Context) *JobExecutionService {
-	repo := repository.NewGormRepository(ctx.OrmConnection.Db, ctx.Logger.Sugar())
+	repo := repository.NewGormRepository(
+		ctx.OrmConnection.Db,
+		ctx.Logger.Sugar(),
+		"Job",
+		"Assessment",
+		"Tasks",
+	)
 	return &JobExecutionService{
 		Service{
 			repo:          repo,
@@ -57,6 +63,20 @@ func (s *JobExecutionService) UpdateJobExecution(id uint, updatedJobExecution *e
 	}
 	//jobExecution.Tasks = updatedJobExecution.Tasks
 	jobExecution.Status = updatedJobExecution.Status
+
+	if err := s.repo.Save(jobExecution); err != nil {
+		return fmt.Errorf("failed to update job execution with ID %d: %w", id, err)
+	}
+
+	return nil
+}
+
+func (s *JobExecutionService) UpdateJobExecutionStatus(id uint, state entity.TaskState) error {
+	jobExecution, err := s.GetJobExecutionById(id)
+	if err != nil {
+		return fmt.Errorf("job execution with ID %d not found: %w", id, err)
+	}
+	jobExecution.Status = state
 
 	if err := s.repo.Save(jobExecution); err != nil {
 		return fmt.Errorf("failed to update job execution with ID %d: %w", id, err)

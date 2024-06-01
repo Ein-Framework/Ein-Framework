@@ -13,7 +13,12 @@ type TaskService struct {
 }
 
 func NewTaskService(ctx Context) *TaskService {
-	repo := repository.NewGormRepository(ctx.OrmConnection.Db, ctx.Logger.Sugar())
+	repo := repository.NewGormRepository(
+		ctx.OrmConnection.Db,
+		ctx.Logger.Sugar(),
+		"Assessment",
+		"AssessmentStage",
+	)
 	return &TaskService{
 		Service{
 			repo:          repo,
@@ -23,7 +28,7 @@ func NewTaskService(ctx Context) *TaskService {
 	}
 }
 
-func (s *TaskService) AddNewTask(state entity.TaskState, template entity.Template /* output string, outputFormat entity.OutputFormat, args map[string]string,*/, assessmentStageId uint) (*entity.Task, error) {
+func (s *TaskService) AddNewTask(state entity.TaskState, template entity.Template, assessmentId uint, assessmentStageId uint) (*entity.Task, error) {
 	if state == "" || /* outputFormat == "" || */ assessmentStageId == 0 {
 		return nil, fmt.Errorf("invalid input: state, outputFormat, and assessmentStageId are required")
 	}
@@ -76,6 +81,20 @@ func (s *TaskService) UpdateTask(id uint, updatedTask *entity.Task) error {
 	task.AssessmentStageId = updatedTask.AssessmentStageId
 	task.AssessmentStage = updatedTask.AssessmentStage
 
+	if err := s.repo.Save(task); err != nil {
+		return fmt.Errorf("failed to update task with ID %d: %w", id, err)
+	}
+
+	return nil
+}
+
+func (s *TaskService) UpdateTaskState(id uint, state entity.TaskState) error {
+	task, err := s.GetTaskById(id)
+	if err != nil {
+		return fmt.Errorf("task with ID %d not found: %w", id, err)
+	}
+
+	task.State = state
 	if err := s.repo.Save(task); err != nil {
 		return fmt.Errorf("failed to update task with ID %d: %w", id, err)
 	}

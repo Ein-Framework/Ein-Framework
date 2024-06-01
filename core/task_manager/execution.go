@@ -8,15 +8,15 @@ import (
 )
 
 func (manager *TaskManager) ExecuteTemplate(Template entity.Template, AssesementID uint) (*entity.Task, error) {
-	_, err := manager.coreServices.AssessmentService.GetAssessmentById(AssesementID)
+	assessment, err := manager.coreServices.AssessmentService.GetAssessmentById(AssesementID)
 	if err != nil {
 		return nil, err
 	}
-	return manager.createTask(Template, AssesementID)
+	return manager.createTask(Template, AssesementID, assessment.StageID)
 }
 
-func (manager *TaskManager) createTask(Template entity.Template, AssesementID uint) (*entity.Task, error) {
-	task, err := manager.coreServices.TaskService.AddNewTask(entity.Queued, Template, AssesementID)
+func (manager *TaskManager) createTask(Template entity.Template, AssesementID uint, assessmentStageId uint) (*entity.Task, error) {
+	task, err := manager.coreServices.TaskService.AddNewTask(entity.Queued, Template, AssesementID, assessmentStageId)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ func (manager *TaskManager) ExecuteJob(jobID uint, AssesementID uint) (*entity.J
 	if err != nil {
 		return nil, err
 	}
-	_, err = manager.coreServices.AssessmentService.GetAssessmentById(AssesementID)
+	assessment, err := manager.coreServices.AssessmentService.GetAssessmentById(AssesementID)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func (manager *TaskManager) ExecuteJob(jobID uint, AssesementID uint) (*entity.J
 	tasks := make([]entity.Task, 0)
 	tasksQueue := queue.CreateQueue[entity.Task]()
 	for _, template := range job.Templates {
-		task, err := manager.createTask(template, AssesementID)
+		task, err := manager.createTask(template, AssesementID, assessment.StageID)
 		if err != nil {
 			manager.coreServices.TaskService.DeleteTasks(tasks...)
 			return nil, err
@@ -81,12 +81,10 @@ func (manager *TaskManager) CancelJob(jobID uint) error {
 	tasks := conc.tasks.Empty()
 	manager.executionsMutex.Unlock()
 
-	jobExec.Status = entity.Canceled
-	manager.coreServices.JobExecutionService.UpdateJobExecution(jobExec.ID, jobExec)
+	manager.coreServices.JobExecutionService.UpdateJobExecutionStatus(jobExec.ID, entity.Canceled)
 
 	for _, task := range tasks {
-		task.State = entity.Canceled
-		manager.coreServices.TaskService.UpdateTask(task.ID, task)
+		manager.coreServices.TaskService.UpdateTaskState(task.ID, entity.Canceled)
 	}
 	return nil
 }

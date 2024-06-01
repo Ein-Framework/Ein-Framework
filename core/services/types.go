@@ -42,12 +42,14 @@ type IAssessmentService interface {
 	GetAssessmentById(id uint) (*entity.Assessment, error)
 }
 type ITaskService interface {
-	AddNewTask(state entity.TaskState, template entity.Template /*output string, outputFormat entity.OutputFormat, args map[string]string, */, assessmentStageId uint) (*entity.Task, error)
+	AddNewTask(state entity.TaskState, template entity.Template, assessmentId uint, assessmentStageId uint) (*entity.Task, error)
 	DeleteTask(id uint) error
 	DeleteTasks(tasks ...entity.Task) []error
 	UpdateTask(id uint, updatedTask *entity.Task) error
 	GetTaskById(id uint) (*entity.Task, error)
 	GetAllTasks() ([]*entity.Task, error)
+
+	UpdateTaskState(id uint, state entity.TaskState) error
 }
 
 type IJobService interface {
@@ -66,4 +68,6 @@ type IJobExecutionService interface {
 	GetJobExecutionsByJobId(id uint) ([]*entity.JobExecution, error)
 	GetJobExecutionsNotCanceledByJobId(id uint) ([]*entity.JobExecution, error)
 	GetAllJobExecutions() ([]*entity.JobExecution, error)
+
+	UpdateJobExecutionStatus(id uint, state entity.TaskState) error
 }

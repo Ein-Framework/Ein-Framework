@@ -8,15 +8,19 @@ import (
 )
 
 type ConcurrentExecution struct {
-	jobExecution *entity.JobExecution
+	jobExecution *entity.JobExecution // Optional, can be nil for single template execution
 	tasks        queue.FifoQueue[entity.Task]
 }
 
-func (exec *ConcurrentExecution) execute() {
+func (manager *TaskManager) execute(exec *ConcurrentExecution) {
 	for {
-		_, err := exec.tasks.Remove()
+		task, err := exec.tasks.Remove()
 		if err == nil {
 			break
+		}
+
+		for _, asset := range task.Assessment.Assets {
+			manager.templateManager.ExecuteTemplate(string(task.Template), CreateExecutionContext(*task, asset))
 		}
 
 		if exec.jobExecution != nil {
@@ -28,12 +32,18 @@ func (exec *ConcurrentExecution) execute() {
 func (manager *TaskManager) RunConcurrentExecution(exec *ConcurrentExecution) {
 	go func() {
 		if exec.jobExecution != nil {
-			manager.AddConcurrentExecution(exec.jobExecution.ID, exec)
+			jobExec := exec.jobExecution
+
+			manager.AddConcurrentExecution(jobExec.ID, exec)
+
+			manager.coreServices.JobExecutionService.UpdateJobExecutionStatus(jobExec.ID, entity.Running)
 			defer func() {
 				manager.RemoveConcurrentExecution(exec.jobExecution.ID)
+
+				manager.coreServices.JobExecutionService.UpdateJobExecutionStatus(jobExec.ID, entity.Stopped)
 			}()
 		}
-		exec.execute()
+		manager.execute(exec)
 	}()
 }
 

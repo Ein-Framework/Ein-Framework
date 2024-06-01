@@ -47,9 +47,9 @@ type JobExecution struct {
 	gorm.Model
 	Job          Job        `json:"periodConfiguration" gorm:"foreignkey:JobID;association_foreignkey:ID;"`
 	JobID        uint       `json:"-"`
+	Assessment   Assessment `json:"assessment" gorm:"foreignkey:AssessmentId;association_foreignkey:ID;"`
 	AssessmentId uint       `json:"-"`
 	Tasks        []Task     `json:"tasks" gorm:"many2many:period_configuration_tasks;"`
-	Assessment   Assessment `json:"assessment" gorm:"foreignkey:AssessmentId;association_foreignkey:ID;"`
 	Status       TaskState  `json:"status"`
 }
 
@@ -74,6 +74,8 @@ type Task struct {
 	Output            string
 	OutputFormat      OutputFormat      `gorm:"type:text"`
 	Args              map[string]string `gorm:"type:text"`
+	AssessmentId      uint              `json:"-"`
+	Assessment        Assessment        `json:"assessment" gorm:"foreignkey:AssessmentId;association_foreignkey:ID;"`
 	AssessmentStageId uint              `json:"-"`
 	AssessmentStage   AssessmentStage   `json:"assessmentStage" gorm:"foreignkey:AssessmentStageId;association_foreignkey:ID;"`
 }

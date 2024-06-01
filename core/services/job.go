@@ -13,7 +13,10 @@ type JobService struct {
 }
 
 func NewJobService(ctx Context) *JobService {
-	repo := repository.NewGormRepository(ctx.OrmConnection.Db, ctx.Logger.Sugar())
+	repo := repository.NewGormRepository(
+		ctx.OrmConnection.Db,
+		ctx.Logger.Sugar(),
+	)
 	return &JobService{
 		Service{
 			repo:          repo,
