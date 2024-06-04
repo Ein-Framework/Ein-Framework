@@ -58,6 +58,10 @@ type IJobService interface {
 	UpdateJob(id uint, updatedJob *entity.Job) error
 	GetJobById(id uint) (*entity.Job, error)
 	GetAllJobs() ([]*entity.Job, error)
+
+	UpdateJobTemplates(jobId uint, templates ...entity.Template) (*entity.Job, error)
+	// AddTemplateToJob(jobId uint, template entity.Template) (*entity.JobTemplate, error)
+	// AddTemplatesToJob(jobId uint, template ...entity.Template) []error
 }
 
 type IJobExecutionService interface {

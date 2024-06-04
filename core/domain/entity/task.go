@@ -4,6 +4,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -39,8 +40,15 @@ const (
 type Job struct {
 	gorm.Model
 	// Type JobType `gorm:"type:text"`
-	Name      string
-	Templates []Template `gorm:"type:text[]"`
+	Name      string         `json:"name" gorm:"type:text"`
+	Templates []TemplateData `json:"templates" gorm:"many2many:job_templates;"`
+}
+
+type TemplateData struct {
+	Template  Template `json:"template" gorm:"primaryKey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
 type JobExecution struct {

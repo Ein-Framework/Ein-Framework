@@ -44,7 +44,7 @@ func (manager *TaskManager) ExecuteJob(jobID uint, AssesementID uint) (*entity.J
 	tasks := make([]entity.Task, 0)
 	tasksQueue := queue.CreateQueue[entity.Task]()
 	for _, template := range job.Templates {
-		task, err := manager.createTask(template, AssesementID, assessment.StageID)
+		task, err := manager.createTask(template.Template, AssesementID, assessment.StageID)
 		if err != nil {
 			manager.coreServices.TaskService.DeleteTasks(tasks...)
 			return nil, err
@@ -87,13 +87,4 @@ func (manager *TaskManager) CancelJob(jobID uint) error {
 		manager.coreServices.TaskService.UpdateTaskState(task.ID, entity.Canceled)
 	}
 	return nil
-}
-
-func (manager *TaskManager) ViewJobStatus(jobID uint) (*entity.TaskState, error) {
-	jobExec, err := manager.coreServices.JobExecutionService.GetJobExecutionById(jobID)
-	if err != nil {
-		return nil, err
-	}
-
-	return &jobExec.Status, nil
 }

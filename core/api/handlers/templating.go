@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"strconv"
-
 	"github.com/Ein-Framework/Ein-Framework/core/api/dtos"
 	"github.com/Ein-Framework/Ein-Framework/core/templating"
 	apiservicemanager "github.com/Ein-Framework/Ein-Framework/pkg/api_service_manager"
@@ -10,34 +8,34 @@ import (
 )
 
 type TemplatingHandler struct {
+	service           *apiservicemanager.ApiService
 	templatingManager templating.ITemplateManager
 }
 
-func NewTemplatingHandler(templatingManager templating.ITemplateManager) *TemplatingHandler {
+func NewTemplatingHandler(service *apiservicemanager.ApiService, templatingManager templating.ITemplateManager) *TemplatingHandler {
 	return &TemplatingHandler{
+		service:           service,
 		templatingManager: templatingManager,
 	}
 }
 
-func (h *TemplatingHandler) SetupTemplatingRoutes(service *apiservicemanager.ApiService) {
-	service.GET("/", h.GetAllAvailableTemplates)
-	service.GET("/loaded", h.GetAllLoadedTemplates)
+func (h *TemplatingHandler) SetupRoutes() {
+	h.service.GET("/", h.GetAllAvailableTemplates)
+	h.service.GET("/loaded", h.GetAllLoadedTemplates)
 
-	service.POST("/load", h.LoadTemplate)
-	service.DELETE("/unload", h.UnloadTemplate)
+	h.service.POST("/load", h.LoadTemplate)
+	h.service.DELETE("/unload", h.UnloadTemplate)
 
-	service.GET("/job/:id", h.GetJobTemplates)
+	h.service.GET("/job/:id", h.GetJobTemplates)
 }
 
 func (h *TemplatingHandler) GetJobTemplates(c echo.Context) error {
-	id := c.Param("id")
-
-	uid64, err := strconv.ParseUint(id, 10, 32)
+	id, err := GetUIntParam(c, "id")
 	if err != nil {
 		return c.JSON(400, dtos.ErrorResponseMsg("Bad Id"))
 	}
 
-	templates, err := h.templatingManager.GetTemplatesForJob(uint(uid64))
+	templates, err := h.templatingManager.GetTemplatesForJob(id)
 	if err != nil {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
