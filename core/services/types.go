@@ -36,6 +36,8 @@ type Services struct {
 }
 
 type IAssessmentService interface {
+	GetAllAssessments() (*[]entity.Assessment, error)
+	AddNewAssessmentFromHackerone(url string) (*entity.Assessment, error)
 	AddNewAssessment(name string, assessmentType entity.AssessmentType, scope entity.Scope) (*entity.Assessment, error)
 	DeleteAssessment(id uint) error
 	UpdateAssessment(id uint, updatedAssessment *entity.Assessment) error

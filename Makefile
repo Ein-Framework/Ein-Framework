@@ -41,7 +41,7 @@ docker-run:
 
 .PHONY: start-db
 start-db:
-	docker-compose -f ./scripts/db.docker-compose.yml up
+	docker-compose -f ./scripts/db.docker-compose.yml up -d
 
 .PHONY: test-cov
 test-cov:
