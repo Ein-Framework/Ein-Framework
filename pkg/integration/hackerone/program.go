@@ -83,7 +83,7 @@ func (integration *Integration) ProgramDetails(handle string) (*Program, error) 
 	if resp.StatusCode == http.StatusNotFound {
 		return nil, fmt.Errorf("failed to fetch program details: %s", resp.Status)
 	} else if resp.StatusCode == http.StatusUnauthorized {
-		
+
 		fmt.Println(resp.Status)
 		return nil, errors.New("invalid credentials for Hackerone")
 	}
