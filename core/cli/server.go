@@ -6,6 +6,7 @@ import (
 	"github.com/Ein-Framework/Ein-Framework/core/api"
 	"github.com/Ein-Framework/Ein-Framework/core/domain"
 	"github.com/Ein-Framework/Ein-Framework/core/services"
+	taskmanager "github.com/Ein-Framework/Ein-Framework/core/task_manager"
 	"github.com/Ein-Framework/Ein-Framework/core/templating"
 	"github.com/Ein-Framework/Ein-Framework/pkg/config"
 	"github.com/Ein-Framework/Ein-Framework/pkg/log"
@@ -56,8 +57,11 @@ func ServerCommands() []*cli.Command {
 }
 
 func InitComponents(coreServices *services.Services, frameworkConfig *config.Config, logger *zap.Logger) *api.AppComponents {
+	templatingManager := templating.New(frameworkConfig, coreServices, logger)
+
 	components := &api.AppComponents{
-		TemplatingManager: templating.New(frameworkConfig, coreServices, logger),
+		TemplatingManager: templatingManager,
+		TaskManager:       taskmanager.New(templatingManager, coreServices, logger),
 	}
 	return components
 }

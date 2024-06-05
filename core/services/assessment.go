@@ -51,7 +51,7 @@ func (s *AssessmentService) UpdateAssessment(id uint, updatedAssessment *entity.
 	assessment.Assets = updatedAssessment.Assets
 	assessment.Stage = updatedAssessment.Stage
 	assessment.EngagementRules = updatedAssessment.EngagementRules
-	assessment.Jobs = updatedAssessment.Jobs
+	// assessment.Jobs = updatedAssessment.Jobs
 	assessment.Reports = updatedAssessment.Reports
 
 	return s.repo.Save(assessment)

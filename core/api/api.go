@@ -26,19 +26,33 @@ func New(coreServices *services.Services, components *AppComponents, config *con
 
 	templatingService, err := serviceManager.NewService("templating")
 	if err != nil {
-		logger.Panic("failed to create templating error")
+		logger.Panic("failed to create templating api service error")
 	}
 
 	pluginService, err := serviceManager.NewService("plugin")
 	if err != nil {
-		logger.Panic("failed to create templating error")
+		logger.Panic("failed to create plugin api service error")
 	}
 
-	templatingHandler := handlers.NewTemplatingHandler(components.TemplatingManager)
-	pluginHandler := handlers.NewPluginsHandler(components.TemplatingManager.PluginManager())
+	jobExecutionService, err := serviceManager.NewService("execution")
+	if err != nil {
+		logger.Panic("failed to create job execution api service error")
+	}
 
-	templatingHandler.SetupTemplatingRoutes(templatingService)
-	pluginHandler.SetupPluginRoutes(pluginService)
+	jobService, err := serviceManager.NewService("job")
+	if err != nil {
+		logger.Panic("failed to create job api service error")
+	}
+
+	templatingHandler := handlers.NewTemplatingHandler(templatingService, components.TemplatingManager)
+	pluginHandler := handlers.NewPluginsHandler(pluginService, components.TemplatingManager.PluginManager())
+	jobExecutionHandler := handlers.NewJobExecutionHandler(jobExecutionService, components.TaskManager)
+	jobHandler := handlers.NewJobHandler(jobService, coreServices.JobService)
+
+	templatingHandler.SetupRoutes()
+	pluginHandler.SetupRoutes()
+	jobExecutionHandler.SetupRoutes()
+	jobHandler.SetupRoutes()
 
 	// e.PUT("/assessments/:id", assessmentHandler.UpdateAssessment)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", config.ServerHTTPPort)))

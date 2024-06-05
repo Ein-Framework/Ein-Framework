@@ -29,7 +29,10 @@ type Service struct {
 }
 
 type Services struct {
-	AssessmentService IAssessmentService
+	AssessmentService   IAssessmentService
+	JobService          IJobService
+	TaskService         ITaskService
+	JobExecutionService IJobExecutionService
 }
 
 type IAssessmentService interface {
@@ -37,4 +40,38 @@ type IAssessmentService interface {
 	DeleteAssessment(id uint) error
 	UpdateAssessment(id uint, updatedAssessment *entity.Assessment) error
 	GetAssessmentById(id uint) (*entity.Assessment, error)
+}
+type ITaskService interface {
+	AddNewTask(state entity.TaskState, template entity.Template, assessmentId uint, assessmentStageId uint) (*entity.Task, error)
+	DeleteTask(id uint) error
+	DeleteTasks(tasks ...entity.Task) []error
+	UpdateTask(id uint, updatedTask *entity.Task) error
+	GetTaskById(id uint) (*entity.Task, error)
+	GetAllTasks() ([]*entity.Task, error)
+
+	UpdateTaskState(id uint, state entity.TaskState) error
+}
+
+type IJobService interface {
+	AddNewJob(name string, templates []entity.Template) (*entity.Job, error)
+	DeleteJob(id uint) error
+	UpdateJob(id uint, updatedJob *entity.Job) error
+	GetJobById(id uint) (*entity.Job, error)
+	GetAllJobs() ([]*entity.Job, error)
+
+	UpdateJobTemplates(jobId uint, templates ...entity.Template) (*entity.Job, error)
+	// AddTemplateToJob(jobId uint, template entity.Template) (*entity.JobTemplate, error)
+	// AddTemplatesToJob(jobId uint, template ...entity.Template) []error
+}
+
+type IJobExecutionService interface {
+	AddNewJobExecution(jobID, assessmentID uint, tasks []entity.Task, status entity.TaskState) (*entity.JobExecution, error)
+	DeleteJobExecution(id uint) error
+	UpdateJobExecution(id uint, updatedJobExecution *entity.JobExecution) error
+	GetJobExecutionById(id uint) (*entity.JobExecution, error)
+	GetJobExecutionsByJobId(id uint) ([]*entity.JobExecution, error)
+	GetJobExecutionsNotCanceledByJobId(id uint) ([]*entity.JobExecution, error)
+	GetAllJobExecutions() ([]*entity.JobExecution, error)
+
+	UpdateJobExecutionStatus(id uint, state entity.TaskState) error
 }

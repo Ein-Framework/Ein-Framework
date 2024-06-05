@@ -10,6 +10,9 @@ func InitServices(db *domain.ORMConnection, logger *zap.Logger, config *config.C
 	context := BuildContext(db, logger, config)
 
 	return &Services{
-		AssessmentService: NewAssessmentService(context),
+		AssessmentService:   NewAssessmentService(context),
+		TaskService:         NewTaskService(context),
+		JobService:          NewJobService(context),
+		JobExecutionService: NewJobExecutionService(context),
 	}
 }

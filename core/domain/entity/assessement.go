@@ -37,8 +37,8 @@ type Assessment struct {
 	StageID           uint            `json:"-"`
 	EngagementRules   EngagementRules `json:"engagementRules" gorm:"foreignkey:EngagementRulesID;association_foreignkey:ID;"`
 	EngagementRulesID uint            `json:"-"`
-	Jobs              []Job           `json:"jobs" gorm:"many2many:assessment_jobs;"`
-	Reports           []Report        `json:"reports" gorm:"many2many:assessment_reports;"`
+	// Jobs              []Job           `json:"jobs" gorm:"many2many:assessment_jobs;"`
+	Reports []Report `json:"reports" gorm:"many2many:assessment_reports;"`
 }
 
 func NewAssessment(name string, assessmentType AssessmentType, scope Scope, repo repository.Repository) (*Assessment, error) {
@@ -48,12 +48,12 @@ func NewAssessment(name string, assessmentType AssessmentType, scope Scope, repo
 	}
 
 	return &Assessment{
-		Name:    name,
-		Type:    assessmentType,
-		Scope:   scope,
-		Stage:   *reconStage,
-		Assets:  []Asset{},
-		Jobs:    []Job{},
+		Name:   name,
+		Type:   assessmentType,
+		Scope:  scope,
+		Stage:  *reconStage,
+		Assets: []Asset{},
+		// Jobs:    []Job{},
 		Reports: []Report{},
 	}, nil
 }

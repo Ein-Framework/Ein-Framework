@@ -8,21 +8,23 @@ import (
 )
 
 type PluginsHandler struct {
+	service       *apiservicemanager.ApiService
 	pluginManager plugins.IPluginManager
 }
 
-func NewPluginsHandler(pluginManager plugins.IPluginManager) *PluginsHandler {
+func NewPluginsHandler(service *apiservicemanager.ApiService, pluginManager plugins.IPluginManager) *PluginsHandler {
 	return &PluginsHandler{
 		pluginManager: pluginManager,
+		service:       service,
 	}
 }
 
-func (h *PluginsHandler) SetupPluginRoutes(service *apiservicemanager.ApiService) {
-	service.GET("/", h.GetAllAvailablePlugins)
-	service.GET("/loaded", h.GetAllLoadedPlugins)
+func (h *PluginsHandler) SetupRoutes() {
+	h.service.GET("/", h.GetAllAvailablePlugins)
+	h.service.GET("/loaded", h.GetAllLoadedPlugins)
 
-	service.POST("/load", h.LoadPlugin)
-	service.DELETE("/unload", h.UnloadPlugin)
+	h.service.POST("/load", h.LoadPlugin)
+	h.service.DELETE("/unload", h.UnloadPlugin)
 }
 
 func (h *PluginsHandler) GetAllAvailablePlugins(c echo.Context) error {

@@ -17,7 +17,7 @@ type TemplatingManager struct {
 type ITemplateManager interface {
 	ReadTemplate(templatePath string) (*TemplateData, error)
 	CanTemplateExecute(templatePath string) error
-	ExecuteTemplate(templatePath string, executionContext map[string]interface{}) ([]TemplateExecutionResultType, error)
+	ExecuteTemplate(templatePath string, executionContext map[string]interface{}) ([]entity.TaskExecutionResultType, error)
 
 	GetAllLoadedTemplatesOfType(typ TemplateType) map[string]*TemplateData
 	GetAllLoadedTemplatesMeta() map[string]TemplateMeta
@@ -58,11 +58,4 @@ type TemplateMeta struct {
 type TemplateStep struct {
 	Protocol string
 	Data     map[string]interface{}
-}
-
-type TemplateExecutionResultType struct {
-	Response  string
-	MetaData  map[string]string
-	NewAssets []entity.Asset
-	Alerts    []entity.Alert
 }

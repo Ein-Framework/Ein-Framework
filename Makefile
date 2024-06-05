@@ -42,3 +42,8 @@ docker-run:
 .PHONY: start-db
 start-db:
 	docker-compose -f ./scripts/db.docker-compose.yml up
+
+.PHONY: test-cov
+test-cov:
+	go test -coverprofile ./test.cov -race -vet=off -v ./...
+	go tool cover -html=test.cov -o test.cov.html
