@@ -1,8 +1,13 @@
 package taskmanager
 
-import "github.com/Ein-Framework/Ein-Framework/core/domain/entity"
+import (
+	"fmt"
+
+	"github.com/Ein-Framework/Ein-Framework/core/domain/entity"
+)
 
 func (manager *TaskManager) ViewJobStatus(jobID uint) (*entity.TaskState, error) {
+	fmt.Println("ViewJobStatus")
 	jobExec, err := manager.coreServices.JobExecutionService.GetJobExecutionById(jobID)
 	if err != nil {
 		return nil, err

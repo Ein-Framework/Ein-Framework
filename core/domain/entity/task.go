@@ -57,7 +57,7 @@ type JobExecution struct {
 	JobID        uint       `json:"-"`
 	Assessment   Assessment `json:"assessment" gorm:"foreignkey:AssessmentId;association_foreignkey:ID;"`
 	AssessmentId uint       `json:"-"`
-	Tasks        []Task     `json:"tasks" gorm:"many2many:period_configuration_tasks;"`
+	Tasks        []Task     `json:"tasks" gorm:"foreignKey:JobExecutionId"` // gorm:"many2many:period_configuration_tasks;"
 	Status       TaskState  `json:"status"`
 }
 
@@ -83,9 +83,11 @@ type Task struct {
 	OutputFormat      OutputFormat      `gorm:"type:text"`
 	Args              map[string]string `gorm:"type:text"`
 	AssessmentId      uint              `json:"-"`
-	Assessment        Assessment        `json:"assessment" gorm:"foreignkey:AssessmentId;association_foreignkey:ID;"`
+	Assessment        Assessment        // `json:"assessment" gorm:"foreignkey:AssessmentId;association_foreignkey:ID;"`
 	AssessmentStageId uint              `json:"-"`
-	AssessmentStage   AssessmentStage   `json:"assessmentStage" gorm:"foreignkey:AssessmentStageId;association_foreignkey:ID;"`
+	AssessmentStage   AssessmentStage   // `json:"assessmentStage" gorm:"foreignkey:AssessmentStageId;association_foreignkey:ID;"`
+	JobExecutionId    *uint             `json:"-"`
+	JobExecution      JobExecution      // `json:"assessmentStage" gorm:"foreignkey:AssessmentStageId;association_foreignkey:ID;"`
 }
 
 type HttpResponse struct {

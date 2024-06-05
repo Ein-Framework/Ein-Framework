@@ -36,6 +36,11 @@ func (manager *TaskManager) ExecuteJob(jobID uint, AssesementID uint) (*entity.J
 	if err != nil {
 		return nil, err
 	}
+
+	if len(job.Templates) == 0 {
+		return nil, errors.New("no templates associated to this job")
+	}
+
 	assessment, err := manager.coreServices.AssessmentService.GetAssessmentById(AssesementID)
 	if err != nil {
 		return nil, err
@@ -44,13 +49,15 @@ func (manager *TaskManager) ExecuteJob(jobID uint, AssesementID uint) (*entity.J
 	tasks := make([]entity.Task, 0)
 	tasksQueue := queue.CreateQueue[entity.Task]()
 	for _, template := range job.Templates {
-		task, err := manager.createTask(template.Template, AssesementID, assessment.StageID)
-		if err != nil {
-			manager.coreServices.TaskService.DeleteTasks(tasks...)
-			return nil, err
+		task := entity.Task{
+			Template:          template.Template,
+			AssessmentId:      AssesementID,
+			AssessmentStageId: assessment.StageID,
+			State:             entity.Queued,
 		}
-		tasks = append(tasks, *task)
-		tasksQueue.Insert(task)
+
+		tasks = append(tasks, task)
+		tasksQueue.Insert(&task)
 	}
 
 	jobExec, err := manager.coreServices.JobExecutionService.AddNewJobExecution(jobID, AssesementID, tasks, entity.Queued)

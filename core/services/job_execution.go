@@ -16,9 +16,6 @@ func NewJobExecutionService(ctx Context) *JobExecutionService {
 	repo := repository.NewGormRepository(
 		ctx.OrmConnection.Db,
 		ctx.Logger.Sugar(),
-		"Job",
-		"Assessment",
-		"Tasks",
 	)
 	return &JobExecutionService{
 		Service{
@@ -87,7 +84,14 @@ func (s *JobExecutionService) UpdateJobExecutionStatus(id uint, state entity.Tas
 
 func (s *JobExecutionService) GetJobExecutionById(id uint) (*entity.JobExecution, error) {
 	var jobExecution entity.JobExecution
-	if err := s.repo.GetOneByID(&jobExecution, id); err != nil {
+
+	err := s.repo.GetOneByID(
+		&jobExecution, id,
+		"Job",
+		"Assessment",
+		"Tasks",
+	)
+	if err != nil {
 		return nil, fmt.Errorf("job execution with ID %d not found: %w", id, err)
 	}
 	return &jobExecution, nil
@@ -112,7 +116,14 @@ func (s *JobExecutionService) GetJobExecutionsNotCanceledByJobId(id uint) ([]*en
 
 func (s *JobExecutionService) GetAllJobExecutions() ([]*entity.JobExecution, error) {
 	var jobExecutions []*entity.JobExecution
-	if err := s.repo.GetAll(&jobExecutions); err != nil {
+
+	err := s.repo.GetAll(
+		&jobExecutions,
+		"Job",
+		"Assessment",
+		"Tasks",
+	)
+	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve job executions: %w", err)
 	}
 	return jobExecutions, nil

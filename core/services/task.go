@@ -16,8 +16,6 @@ func NewTaskService(ctx Context) *TaskService {
 	repo := repository.NewGormRepository(
 		ctx.OrmConnection.Db,
 		ctx.Logger.Sugar(),
-		"Assessment",
-		"AssessmentStage",
 	)
 	return &TaskService{
 		Service{
@@ -39,6 +37,7 @@ func (s *TaskService) AddNewTask(state entity.TaskState, template entity.Templat
 		//Output:            output,
 		//OutputFormat:      outputFormat,
 		//Args:              args,
+		AssessmentId:      assessmentId,
 		AssessmentStageId: assessmentStageId,
 	}
 
@@ -89,6 +88,8 @@ func (s *TaskService) UpdateTask(id uint, updatedTask *entity.Task) error {
 }
 
 func (s *TaskService) UpdateTaskState(id uint, state entity.TaskState) error {
+	s.logger.Debug("TaskService: Updating task")
+
 	task, err := s.GetTaskById(id)
 	if err != nil {
 		return fmt.Errorf("task with ID %d not found: %w", id, err)
@@ -104,7 +105,14 @@ func (s *TaskService) UpdateTaskState(id uint, state entity.TaskState) error {
 
 func (s *TaskService) GetTaskById(id uint) (*entity.Task, error) {
 	var task entity.Task
-	if err := s.repo.GetOneByID(&task, id); err != nil {
+
+	err := s.repo.GetOneByID(
+		&task,
+		id,
+		"Assessment",
+		"AssessmentStage",
+	)
+	if err != nil {
 		return nil, fmt.Errorf("task with ID %d not found: %w", id, err)
 	}
 	return &task, nil
@@ -112,7 +120,12 @@ func (s *TaskService) GetTaskById(id uint) (*entity.Task, error) {
 
 func (s *TaskService) GetAllTasks() ([]*entity.Task, error) {
 	var tasks []*entity.Task
-	if err := s.repo.GetAll(&tasks); err != nil {
+
+	err := s.repo.GetAll(&tasks,
+		"Assessment",
+		"AssessmentStage",
+	)
+	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve tasks: %w", err)
 	}
 	return tasks, nil

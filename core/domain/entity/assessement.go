@@ -39,6 +39,7 @@ type Assessment struct {
 	EngagementRulesID uint            `json:"-"`
 	// Jobs              []Job           `json:"jobs" gorm:"many2many:assessment_jobs;"`
 	Reports []Report `json:"reports" gorm:"many2many:assessment_reports;"`
+	Tasks   []Task   `json:"tasks" gorm:"foreignKey:AssessmentId"`
 }
 
 func NewAssessment(name string, assessmentType AssessmentType, scope Scope, engagementRules EngagementRules, repo repository.Repository) (*Assessment, error) {

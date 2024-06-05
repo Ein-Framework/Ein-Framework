@@ -15,13 +15,17 @@ type ConcurrentExecution struct {
 func (manager *TaskManager) execute(exec *ConcurrentExecution) {
 	for {
 		task, err := exec.tasks.Remove()
-		if err == nil {
+		if err != nil {
 			break
 		}
+
+		manager.coreServices.TaskService.UpdateTaskState(task.ID, entity.Running)
 
 		for _, asset := range task.Assessment.Assets {
 			manager.templateManager.ExecuteTemplate(string(task.Template), CreateExecutionContext(*task, asset))
 		}
+
+		manager.coreServices.TaskService.UpdateTaskState(task.ID, entity.Stopped)
 
 		if exec.jobExecution != nil {
 			time.Sleep(time.Second * time.Duration(exec.jobExecution.Assessment.EngagementRules.RateLimitPerSecond))
