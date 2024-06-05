@@ -7,6 +7,7 @@ import (
 	"github.com/Ein-Framework/Ein-Framework/core/api/dtos/requests"
 	"github.com/Ein-Framework/Ein-Framework/core/domain/entity"
 	"github.com/Ein-Framework/Ein-Framework/core/services"
+	apiservicemanager "github.com/Ein-Framework/Ein-Framework/pkg/api_service_manager"
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,6 +19,17 @@ func NewAssessmentHandler(assessmentService services.IAssessmentService) *Assess
 	return &AssessmentHandler{
 		assessmentService: assessmentService,
 	}
+}
+
+func (h *AssessmentHandler) SetupRoutes(service *apiservicemanager.ApiService) {
+
+	service.GET("/assessments", h.ListAssesments)
+	service.GET("/assessments/:id", h.GetAssessmentById)
+	service.POST("/assessments", h.CreateAssessment)
+	service.POST("/assessments/url", h.AddNewAssessmentFromURL)
+	service.PUT("/assessment/:id", h.UpdateAssessment)
+	service.DELETE("/assessment/:id", h.DeleteAssessment)
+
 }
 
 func (h *AssessmentHandler) ListAssesments(c echo.Context) error {

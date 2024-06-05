@@ -22,16 +22,13 @@ func New(coreServices *services.Services, components *AppComponents, config *con
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	assessmentHandler := handlers.NewAssessmentHandler(coreServices.AssessmentService)
-
 	serviceManager := apiservicemanager.NewServiceManager(e)
-	api := e.Group("/api")
-	api.GET("/assessments", assessmentHandler.ListAssesments)
-	api.GET("/assessments/:id", assessmentHandler.GetAssessmentById)
-	api.POST("/assessments", assessmentHandler.CreateAssessment)
-	api.POST("/assessments/url", assessmentHandler.AddNewAssessmentFromURL)
-	api.PUT("/assessment/:id", assessmentHandler.UpdateAssessment)
-	api.DELETE("/assessment/:id", assessmentHandler.DeleteAssessment)
+
+	assessmentService, err := serviceManager.NewService(("assessment"))
+
+	if err != nil {
+		logger.Panic("failed to create assessment service")
+	}
 
 	templatingService, err := serviceManager.NewService("templating")
 	if err != nil {
@@ -57,11 +54,13 @@ func New(coreServices *services.Services, components *AppComponents, config *con
 	pluginHandler := handlers.NewPluginsHandler(pluginService, components.TemplatingManager.PluginManager())
 	jobExecutionHandler := handlers.NewJobExecutionHandler(jobExecutionService, components.TaskManager)
 	jobHandler := handlers.NewJobHandler(jobService, coreServices.JobService)
+	assessmentHandler := handlers.NewAssessmentHandler(coreServices.AssessmentService)
 
 	templatingHandler.SetupRoutes()
 	pluginHandler.SetupRoutes()
 	jobExecutionHandler.SetupRoutes()
 	jobHandler.SetupRoutes()
+	assessmentHandler.SetupRoutes(assessmentService)
 
 	// e.PUT("/assessments/:id", assessmentHandler.UpdateAssessment)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", config.ServerHTTPPort)))
