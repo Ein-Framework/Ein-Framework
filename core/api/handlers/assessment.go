@@ -13,23 +13,23 @@ import (
 
 type AssessmentHandler struct {
 	assessmentService services.IAssessmentService
+	service           *apiservicemanager.ApiService
 }
 
-func NewAssessmentHandler(assessmentService services.IAssessmentService) *AssessmentHandler {
+func NewAssessmentHandler(apiService *apiservicemanager.ApiService, assessmentService services.IAssessmentService) *AssessmentHandler {
 	return &AssessmentHandler{
 		assessmentService: assessmentService,
+		service:           apiService,
 	}
 }
 
-func (h *AssessmentHandler) SetupRoutes(service *apiservicemanager.ApiService) {
-
-	service.GET("/assessments", h.ListAssesments)
-	service.GET("/assessments/:id", h.GetAssessmentById)
-	service.POST("/assessments", h.CreateAssessment)
-	service.POST("/assessments/url", h.AddNewAssessmentFromURL)
-	service.PUT("/assessment/:id", h.UpdateAssessment)
-	service.DELETE("/assessment/:id", h.DeleteAssessment)
-
+func (h *AssessmentHandler) SetupRoutes() {
+	h.service.GET("/assessments", h.ListAssesments)
+	h.service.GET("/assessments/:id", h.GetAssessmentById)
+	h.service.POST("/assessments", h.CreateAssessment)
+	h.service.POST("/assessments/url", h.AddNewAssessmentFromURL)
+	h.service.PUT("/assessment/:id", h.UpdateAssessment)
+	h.service.DELETE("/assessment/:id", h.DeleteAssessment)
 }
 
 func (h *AssessmentHandler) ListAssesments(c echo.Context) error {

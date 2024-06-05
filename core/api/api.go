@@ -54,13 +54,13 @@ func New(coreServices *services.Services, components *AppComponents, config *con
 	pluginHandler := handlers.NewPluginsHandler(pluginService, components.TemplatingManager.PluginManager())
 	jobExecutionHandler := handlers.NewJobExecutionHandler(jobExecutionService, components.TaskManager)
 	jobHandler := handlers.NewJobHandler(jobService, coreServices.JobService)
-	assessmentHandler := handlers.NewAssessmentHandler(coreServices.AssessmentService)
+	assessmentHandler := handlers.NewAssessmentHandler(assessmentService, coreServices.AssessmentService)
 
 	templatingHandler.SetupRoutes()
 	pluginHandler.SetupRoutes()
 	jobExecutionHandler.SetupRoutes()
 	jobHandler.SetupRoutes()
-	assessmentHandler.SetupRoutes(assessmentService)
+	assessmentHandler.SetupRoutes()
 
 	// e.PUT("/assessments/:id", assessmentHandler.UpdateAssessment)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", config.ServerHTTPPort)))
