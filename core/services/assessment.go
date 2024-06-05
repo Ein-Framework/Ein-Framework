@@ -177,7 +177,7 @@ func (s *AssessmentService) HackeroneToAssessmentAdapter(program hackerone.Progr
 			RateLimitPerSecond: 10,
 			FullDescription:    "",
 		},
-		Jobs:    []entity.Job{},
+		// Jobs:    []entity.Job{},
 		Reports: []entity.Report{},
 	}
 
