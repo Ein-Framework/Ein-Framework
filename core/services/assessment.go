@@ -32,7 +32,6 @@ func NewAssessmentService(ctx Context) *AssessmentService {
 }
 
 func (s *AssessmentService) GetAllAssessments() (*[]entity.Assessment, error) {
-
 	var assessments []entity.Assessment
 
 	err := s.repo.GetAll(&assessments)
@@ -49,8 +48,8 @@ func (s *AssessmentService) DeleteAssesment(id uint) error {
 	return s.repo.Delete(&entity.Assessment{Model: gorm.Model{ID: id}})
 }
 
-func (s *AssessmentService) AddNewAssessment(name string, assessmentType entity.AssessmentType, scope entity.Scope) (*entity.Assessment, error) {
-	assessment, err := entity.NewAssessment(name, assessmentType, scope, s.repo)
+func (s *AssessmentService) AddNewAssessment(name string, assessmentType entity.AssessmentType, scope entity.Scope, engagementRules entity.EngagementRules) (*entity.Assessment, error) {
+	assessment, err := entity.NewAssessment(name, assessmentType, scope, engagementRules, s.repo)
 	if err != nil {
 		return nil, err
 	}

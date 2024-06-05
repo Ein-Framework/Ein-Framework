@@ -41,20 +41,21 @@ type Assessment struct {
 	Reports []Report `json:"reports" gorm:"many2many:assessment_reports;"`
 }
 
-func NewAssessment(name string, assessmentType AssessmentType, scope Scope, repo repository.Repository) (*Assessment, error) {
+func NewAssessment(name string, assessmentType AssessmentType, scope Scope, engagementRules EngagementRules, repo repository.Repository) (*Assessment, error) {
 	reconStage, err := GetStageByName(ReconnaissanceStage, repo)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Assessment{
-		Name:   name,
-		Type:   assessmentType,
-		Scope:  scope,
-		Stage:  *reconStage,
-		Assets: []Asset{},
+		Name:            name,
+		Type:            assessmentType,
+		Scope:           scope,
+		Stage:           *reconStage,
+		Assets:          []Asset{},
+		EngagementRules: engagementRules,
+		Reports:         []Report{},
 		// Jobs:    []Job{},
-		Reports: []Report{},
 	}, nil
 }
 

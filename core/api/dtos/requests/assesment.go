@@ -8,10 +8,11 @@ type CreateAssessmentFromURL struct {
 }
 
 type AssessmentRequest struct {
-	Id             uint                  `param:"id"`
-	Name           string                `json:"name"`
-	AssessmentType entity.AssessmentType `json:"assessmentType"`
-	Scope          entity.Scope          `json:"scope"`
+	Id              uint                   `param:"id"`
+	Name            string                 `json:"name"`
+	AssessmentType  entity.AssessmentType  `json:"assessmentType"`
+	Scope           entity.Scope           `json:"scope"`
+	EngagementRules entity.EngagementRules `json:"engagementRules"`
 }
 
 type IdParam struct {

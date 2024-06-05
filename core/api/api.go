@@ -14,6 +14,11 @@ import (
 )
 
 func New(coreServices *services.Services, components *AppComponents, config *config.Config, logger *zap.Logger) *ApiServer {
+	err := coreServices.AssessmentStageService.InitStages()
+	if err != nil {
+		logger.Panic("failed to init stages")
+	}
+
 	e := echo.New()
 
 	// Middleware
@@ -25,7 +30,6 @@ func New(coreServices *services.Services, components *AppComponents, config *con
 	serviceManager := apiservicemanager.NewServiceManager(e)
 
 	assessmentService, err := serviceManager.NewService(("assessment"))
-
 	if err != nil {
 		logger.Panic("failed to create assessment service")
 	}

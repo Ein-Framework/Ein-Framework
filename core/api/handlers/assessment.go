@@ -24,12 +24,12 @@ func NewAssessmentHandler(apiService *apiservicemanager.ApiService, assessmentSe
 }
 
 func (h *AssessmentHandler) SetupRoutes() {
-	h.service.GET("/assessments", h.ListAssesments)
-	h.service.GET("/assessments/:id", h.GetAssessmentById)
-	h.service.POST("/assessments", h.CreateAssessment)
-	h.service.POST("/assessments/url", h.AddNewAssessmentFromURL)
-	h.service.PUT("/assessment/:id", h.UpdateAssessment)
-	h.service.DELETE("/assessment/:id", h.DeleteAssessment)
+	h.service.GET("", h.ListAssesments)
+	h.service.GET("/:id", h.GetAssessmentById)
+	h.service.POST("", h.CreateAssessment)
+	h.service.POST("/url", h.AddNewAssessmentFromURL)
+	h.service.PUT("/:id", h.UpdateAssessment)
+	h.service.DELETE("/:id", h.DeleteAssessment)
 }
 
 func (h *AssessmentHandler) ListAssesments(c echo.Context) error {
@@ -61,20 +61,23 @@ func (h *AssessmentHandler) GetAssessmentById(c echo.Context) error {
 }
 
 func (h *AssessmentHandler) CreateAssessment(c echo.Context) error {
-
 	req := &requests.AssessmentRequest{}
 
 	if err := c.Bind(req); err != nil {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
-	_, err := h.assessmentService.AddNewAssessment(req.Name, req.AssessmentType, req.Scope)
-
+	assessment, err := h.assessmentService.AddNewAssessment(
+		req.Name,
+		req.AssessmentType,
+		req.Scope,
+		req.EngagementRules,
+	)
 	if err != nil {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
-	return c.JSON(200, dtos.InfoMsgResponse("Assessment created successfully"))
+	return c.JSON(200, dtos.SuccessDataMsgResponse(assessment))
 }
 
 func (h *AssessmentHandler) DeleteAssessment(c echo.Context) error {
@@ -83,14 +86,19 @@ func (h *AssessmentHandler) DeleteAssessment(c echo.Context) error {
 
 	if err = c.Bind(req); err != nil {
 		return c.JSON(400, dtos.ErrorResponseMsg("Bad Id"))
-
 	}
+
+	assessment, err := h.assessmentService.GetAssessmentById(req.Id)
+	if err != nil {
+		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
+	}
+
 	err = h.assessmentService.DeleteAssessment(req.Id)
 	if err != nil {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
-	return c.JSON(200, dtos.InfoMsgResponse("Assessment deleted successfully"))
+	return c.JSON(200, dtos.SuccessDataMsgResponse(assessment))
 }
 
 func (h *AssessmentHandler) UpdateAssessment(c echo.Context) error {

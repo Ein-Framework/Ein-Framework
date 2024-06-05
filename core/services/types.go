@@ -29,20 +29,32 @@ type Service struct {
 }
 
 type Services struct {
-	AssessmentService   IAssessmentService
-	JobService          IJobService
-	TaskService         ITaskService
-	JobExecutionService IJobExecutionService
+	AssessmentService      IAssessmentService
+	JobService             IJobService
+	TaskService            ITaskService
+	JobExecutionService    IJobExecutionService
+	AssessmentStageService IAssessmentStageService
 }
 
 type IAssessmentService interface {
 	GetAllAssessments() (*[]entity.Assessment, error)
 	AddNewAssessmentFromHackerone(url string) (*entity.Assessment, error)
-	AddNewAssessment(name string, assessmentType entity.AssessmentType, scope entity.Scope) (*entity.Assessment, error)
+	AddNewAssessment(name string, assessmentType entity.AssessmentType, scope entity.Scope, engagementRules entity.EngagementRules) (*entity.Assessment, error)
 	DeleteAssessment(id uint) error
 	UpdateAssessment(id uint, updatedAssessment *entity.Assessment) error
 	GetAssessmentById(id uint) (*entity.Assessment, error)
 }
+
+type IAssessmentStageService interface {
+	GetAllAssessmentStages() (*[]entity.AssessmentStage, error)
+	AddNewAssessmentStage(name string, description string, completed bool) (*entity.AssessmentStage, error)
+	DeleteAssessmentStage(id uint) error
+	UpdateAssessmentStage(id uint, updatedAssessment *entity.AssessmentStage) error
+	GetAssessmentStageById(id uint) (*entity.AssessmentStage, error)
+
+	InitStages() error
+}
+
 type ITaskService interface {
 	AddNewTask(state entity.TaskState, template entity.Template, assessmentId uint, assessmentStageId uint) (*entity.Task, error)
 	DeleteTask(id uint) error
