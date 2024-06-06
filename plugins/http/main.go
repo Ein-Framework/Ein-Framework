@@ -2,16 +2,15 @@ package main
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/Ein-Framework/Ein-Framework/core/domain/entity"
 	"github.com/Ein-Framework/Ein-Framework/pkg/plugins"
-	"github.com/google/uuid"
 )
 
 type HttpProtocol struct {
 	plugins.Plugin
-	targetIp   string
-	port_range string
-	agentId    uuid.UUID
+	alerts []entity.Alert
 }
 
 func New() plugins.IPlugin {
@@ -32,6 +31,7 @@ func New() plugins.IPlugin {
 				Protocol:   "http",
 			},
 		},
+		alerts: make([]entity.Alert, 0),
 	}
 }
 
@@ -55,5 +55,15 @@ func (p *HttpProtocol) SetArgs(args map[string]interface{}) error {
 func (p *HttpProtocol) Execute(body map[string]interface{}, others ...interface{}) interface{} {
 	fmt.Println("Executing")
 	fmt.Println(body)
-	return nil
+
+	time.Sleep(time.Second * 30)
+
+	p.alerts = append(p.alerts, entity.Alert{
+		Title:       "File Disclosure Found",
+		Description: ".env found",
+	})
+
+	return entity.TaskExecutionResultType{
+		Alerts: p.alerts,
+	}
 }

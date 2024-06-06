@@ -43,7 +43,7 @@ func NewDatabase(cfg config.DatabaseConfig) (*ORMConnection, error) {
 		&entity.EngagementRules{},
 		&entity.Assessment{},
 		&entity.User{},
-		&entity.TaskExecutionResultType{},
+		// &entity.TaskExecutionResultType{},
 		&entity.HttpResponse{},
 		&entity.TemplateData{},
 		// &entity.JobTemplate{},

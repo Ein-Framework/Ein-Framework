@@ -34,6 +34,16 @@ type Services struct {
 	TaskService            ITaskService
 	JobExecutionService    IJobExecutionService
 	AssessmentStageService IAssessmentStageService
+	AlertService           IAlertService
+}
+
+type IAlertService interface {
+	GetAllAlerts() (*[]entity.Alert, error)
+	AddNewAlert(title string, description string, scope string) (*entity.Alert, error)
+	AddNewAlerts(...entity.Alert) []error
+	DeleteAlert(id uint) error
+	UpdateAlert(id uint, updatedAssessment *entity.Alert) error
+	GetAlertById(id uint) (*entity.Alert, error)
 }
 
 type IAssessmentService interface {

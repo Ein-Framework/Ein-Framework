@@ -23,8 +23,20 @@ func (manager *TaskManager) execute(exec *ConcurrentExecution) {
 		fmt.Println("UpdateTaskState")
 		manager.coreServices.TaskService.UpdateTaskState(task.ID, entity.Running)
 
+		// resultsMap := make(map[entity.Template][]entity.TaskExecutionResultType)
 		for _, asset := range task.Assessment.Scope.InScope {
-			manager.templateManager.ExecuteTemplate(string(task.Template), CreateExecutionContext(*task, asset))
+			results, err := manager.templateManager.ExecuteTemplate(string(task.Template), CreateExecutionContext(*task, asset))
+			if err != nil {
+				fmt.Println("error executing template")
+				fmt.Println(err)
+			}
+			fmt.Println("Got results")
+
+			for _, res := range results {
+				fmt.Println(res.Alerts)
+				manager.coreServices.AlertService.AddNewAlerts(res.Alerts...)
+			}
+			// resultsMap[task.Template] = results
 		}
 
 		fmt.Println("UpdateTaskState")

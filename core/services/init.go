@@ -15,5 +15,6 @@ func InitServices(db *domain.ORMConnection, logger *zap.Logger, config *config.C
 		JobService:             NewJobService(context),
 		JobExecutionService:    NewJobExecutionService(context),
 		AssessmentStageService: NewAssessmentStageService(context),
+		AlertService:           NewAlertService(context),
 	}
 }
