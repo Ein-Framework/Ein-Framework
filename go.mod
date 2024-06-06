@@ -4,6 +4,7 @@ go 1.22.1
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
+	github.com/google/uuid v1.6.0
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/stretchr/testify v1.9.0
 	github.com/urfave/cli/v2 v2.27.1

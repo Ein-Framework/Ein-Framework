@@ -92,7 +92,7 @@ func (manager PluginManager) LoadPlugin(filePath string) (*LoadedPluginInfo, err
 
 	fmt.Println("Loading plugin:", filePath)
 
-	err := validateLibraryPath(filePath)
+	err := validateLibraryPath(fullPath)
 	if err != nil {
 		return nil, err
 	}
@@ -144,6 +144,7 @@ func (manager PluginManager) LoadAllPlugins() ([]*LoadedPluginInfo, error) {
 		loadedPlugin, err := manager.LoadPlugin(file)
 		if err != nil {
 			fmt.Println("[-] error loading plugin: ", file)
+			fmt.Println(err)
 			return plugins, err
 		}
 

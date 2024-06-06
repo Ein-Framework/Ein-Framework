@@ -110,6 +110,8 @@ func (s *TaskService) GetTaskById(id uint) (*entity.Task, error) {
 		&task,
 		id,
 		"Assessment",
+		"Assessment.Scope.InScope",
+		"Assessment.Scope.OutScope",
 		"AssessmentStage",
 	)
 	if err != nil {
@@ -123,6 +125,9 @@ func (s *TaskService) GetAllTasks() ([]*entity.Task, error) {
 
 	err := s.repo.GetAll(&tasks,
 		"Assessment",
+		"Assessment.Scope",
+		"Assessment.Scope.InScope",
+		"Assessment.Scope.OutScope",
 		"AssessmentStage",
 	)
 	if err != nil {

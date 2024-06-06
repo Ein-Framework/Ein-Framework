@@ -33,7 +33,6 @@ type IPlugin interface {
 	MetaInfo() *Metadata
 	Info() *PluginInfo
 	Options() map[string]string
-	Execute(...interface{}) interface{}
+	Execute(map[string]interface{}, ...interface{}) interface{}
 	SetArgs(map[string]interface{}) error
-	IsWaitingForTaskResult() (bool, string)
 }

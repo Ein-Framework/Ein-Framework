@@ -6,7 +6,8 @@ import (
 
 func New(cfg *config.Config) IPluginManager {
 	return PluginManager{
-		config:        cfg,
-		loadedPlugins: make(map[string]*LoadedPluginInfo),
+		config:           cfg,
+		loadedPlugins:    make(map[string]*LoadedPluginInfo),
+		protocolToPlugin: make(map[string]*LoadedPluginInfo),
 	}
 }

@@ -1,6 +1,7 @@
 package taskmanager
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/Ein-Framework/Ein-Framework/core/domain/entity"
@@ -19,12 +20,14 @@ func (manager *TaskManager) execute(exec *ConcurrentExecution) {
 			break
 		}
 
+		fmt.Println("UpdateTaskState")
 		manager.coreServices.TaskService.UpdateTaskState(task.ID, entity.Running)
 
-		for _, asset := range task.Assessment.Assets {
+		for _, asset := range task.Assessment.Scope.InScope {
 			manager.templateManager.ExecuteTemplate(string(task.Template), CreateExecutionContext(*task, asset))
 		}
 
+		fmt.Println("UpdateTaskState")
 		manager.coreServices.TaskService.UpdateTaskState(task.ID, entity.Stopped)
 
 		if exec.jobExecution != nil {

@@ -1,0 +1,13 @@
+meta:
+  author: Ein-Framework
+  type: recon
+  remediation: Block access to files
+
+steps:
+  http:
+    method: GET
+    url: someurl
+    path: test
+    matcher:
+      - body:
+          regex: hi

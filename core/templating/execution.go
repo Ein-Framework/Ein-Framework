@@ -68,6 +68,8 @@ func (manager *TemplatingManager) ExecuteTemplate(templatePath string, execution
 }
 
 func (step *TemplateStep) applyExecutionContext(context map[string]interface{}) (*TemplateStep, error) {
+	fmt.Println(context)
+	fmt.Println(step.Data)
 	toParse, err := yaml.Marshal(step.Data)
 	if err != nil {
 		return nil, fmt.Errorf("error (1) parsing protocol '%s' variables", step.Protocol)
@@ -85,7 +87,7 @@ func (step *TemplateStep) applyExecutionContext(context map[string]interface{}) 
 	}
 
 	var parsedData map[string]interface{}
-	err = yaml.Unmarshal(buff.Bytes(), parsedData)
+	err = yaml.Unmarshal(buff.Bytes(), &parsedData)
 	if err != nil {
 		return nil, fmt.Errorf("error (4) parsing protocol '%s' variables", step.Protocol)
 	}

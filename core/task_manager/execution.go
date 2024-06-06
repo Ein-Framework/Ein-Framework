@@ -47,23 +47,30 @@ func (manager *TaskManager) ExecuteJob(jobID uint, AssesementID uint) (*entity.J
 	}
 
 	tasks := make([]entity.Task, 0)
-	tasksQueue := queue.CreateQueue[entity.Task]()
 	for _, template := range job.Templates {
 		task := entity.Task{
 			Template:          template.Template,
 			AssessmentId:      AssesementID,
+			Assessment:        *assessment,
 			AssessmentStageId: assessment.StageID,
 			State:             entity.Queued,
 		}
 
 		tasks = append(tasks, task)
-		tasksQueue.Insert(&task)
 	}
 
 	jobExec, err := manager.coreServices.JobExecutionService.AddNewJobExecution(jobID, AssesementID, tasks, entity.Queued)
 	if err != nil {
 		manager.coreServices.TaskService.DeleteTasks(tasks...)
 		return nil, err
+	}
+
+	jobExec, err = manager.coreServices.JobExecutionService.GetJobExecutionById(jobExec.ID)
+
+	tasksQueue := queue.CreateQueue[entity.Task]()
+	for _, task := range jobExec.Tasks {
+		preloadedTask, _ := manager.coreServices.TaskService.GetTaskById(task.ID)
+		tasksQueue.Insert(preloadedTask)
 	}
 
 	exec := &ConcurrentExecution{

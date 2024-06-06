@@ -47,3 +47,21 @@ start-db:
 test-cov:
 	go test -coverprofile ./test.cov -race -vet=off -v ./...
 	go tool cover -html=test.cov -o test.cov.html
+
+.PHONY: build-plugins
+build-plugins:
+	go build -o ./plugins/dist/http.so -buildmode=plugin ./plugins/http/main.go
+
+.PHONY: cp-plugins
+cp-plugins:
+	cp ./plugins/dist/* ~/.ein-framework/plugins/
+
+.PHONY: install-plugins
+install-plugins: build-plugins cp-plugins
+
+.PHONY: install-templates
+install-templates:
+	cp ./templates/* ~/.ein-framework/templates/
+
+.PHONY: setup-framework
+setup-framework: install-plugins install-templates

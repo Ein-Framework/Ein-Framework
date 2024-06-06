@@ -89,6 +89,7 @@ func (s *JobExecutionService) GetJobExecutionById(id uint) (*entity.JobExecution
 		&jobExecution, id,
 		"Job",
 		"Assessment",
+		"Assessment.Scope.InScope",
 		"Tasks",
 	)
 	if err != nil {
@@ -121,6 +122,7 @@ func (s *JobExecutionService) GetAllJobExecutions() ([]*entity.JobExecution, err
 		&jobExecutions,
 		"Job",
 		"Assessment",
+		"Assessment.Scope.InScope",
 		"Tasks",
 	)
 	if err != nil {
