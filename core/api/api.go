@@ -54,23 +54,37 @@ func New(coreServices *services.Services, components *AppComponents, config *con
 		logger.Panic("failed to create job api service error")
 	}
 
+	alertService, err := serviceManager.NewService("alert")
+	if err != nil {
+		logger.Panic("failed to create alert api service error")
+	}
+
 	templatingHandler := handlers.NewTemplatingHandler(templatingService, components.TemplatingManager)
 	pluginHandler := handlers.NewPluginsHandler(pluginService, components.TemplatingManager.PluginManager())
 	jobExecutionHandler := handlers.NewJobExecutionHandler(jobExecutionService, components.TaskManager)
 	jobHandler := handlers.NewJobHandler(jobService, coreServices.JobService)
 	assessmentHandler := handlers.NewAssessmentHandler(assessmentService, coreServices.AssessmentService)
+	alertHandler := handlers.NewAlertHandler(alertService, coreServices.AlertService)
 
-	templatingHandler.SetupRoutes()
-	pluginHandler.SetupRoutes()
-	jobExecutionHandler.SetupRoutes()
-	jobHandler.SetupRoutes()
-	assessmentHandler.SetupRoutes()
+	SetupRoutes(
+		templatingHandler,
+		pluginHandler,
+		jobExecutionHandler,
+		jobHandler,
+		assessmentHandler,
+		alertHandler,
+	)
 
-	// e.PUT("/assessments/:id", assessmentHandler.UpdateAssessment)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", config.ServerHTTPPort)))
 
 	return &ApiServer{
 		server:     e,
 		components: components,
+	}
+}
+
+func SetupRoutes(handlers ...handlers.IHandler) {
+	for _, handler := range handlers {
+		handler.SetupRoutes()
 	}
 }
