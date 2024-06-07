@@ -18,8 +18,11 @@ func stringToTemplateType(value string) TemplateType {
 func parseTemplateMeta(template map[string]interface{}) (TemplateMeta, error) {
 	meta := template["meta"].(map[string]interface{})
 	return TemplateMeta{
-		Author: meta["author"].(string),
-		Type:   stringToTemplateType(meta["type"].(string)),
+		Author:      meta["author"].(string),
+		Remediation: meta["remediation"].(string),
+		Description: meta["description"].(string),
+		Severity:    meta["severity"].(string),
+		Type:        stringToTemplateType(meta["type"].(string)),
 	}, nil
 }
 

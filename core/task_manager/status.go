@@ -36,3 +36,12 @@ func (manager *TaskManager) GetRunningJobs() ([]*entity.JobExecution, error) {
 
 	return result, nil
 }
+
+func (manager *TaskManager) GetAllJobs() ([]*entity.JobExecution, error) {
+	res, err := manager.coreServices.JobExecutionService.GetAllJobExecutions()
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}

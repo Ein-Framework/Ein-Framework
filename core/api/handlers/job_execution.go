@@ -22,13 +22,15 @@ func NewJobExecutionHandler(service *apiservicemanager.ApiService, taskManager t
 func (h *JobExecutionHandler) SetupRoutes() {
 	h.service.GET("/job/:id/state", h.GetJobState)
 	h.service.GET("/task/:id/state", h.GetTaskState)
+	h.service.GET("/active", h.GetRunningJobs)
 
 	h.service.POST("/job", h.ExecuteJob)
 	h.service.POST("/template", h.ExecuteTemplate)
+	h.service.GET("/active", h.GetRunningJobs)
 
 	h.service.DELETE("/:id", h.CancelJobExecution)
 
-	h.service.GET("", h.GetRunningJobs)
+	h.service.GET("", h.GetAllJobs)
 }
 
 func (h *JobExecutionHandler) GetJobState(c echo.Context) error {
@@ -99,6 +101,15 @@ func (h *JobExecutionHandler) CancelJobExecution(c echo.Context) error {
 	}
 
 	return c.JSON(200, dtos.InfoMsgResponse("Job execution canceled"))
+}
+
+func (h *JobExecutionHandler) GetAllJobs(c echo.Context) error {
+	executions, err := h.taskManager.GetAllJobs()
+	if err != nil {
+		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
+	}
+
+	return c.JSON(200, dtos.SuccessDataMsgResponse(executions))
 }
 
 func (h *JobExecutionHandler) GetRunningJobs(c echo.Context) error {

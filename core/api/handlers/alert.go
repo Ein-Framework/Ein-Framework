@@ -32,7 +32,7 @@ func (h *AlertHandler) ListAlerts(c echo.Context) error {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
-	return c.JSON(200, alerts)
+	return c.JSON(200, dtos.SuccessDataMsgResponse(alerts))
 }
 
 func (h *AlertHandler) GetAlertById(c echo.Context) error {
@@ -47,5 +47,5 @@ func (h *AlertHandler) GetAlertById(c echo.Context) error {
 		return c.JSON(404, dtos.ErrorResponseMsg("Alert not found"))
 	}
 
-	return c.JSON(200, alert)
+	return c.JSON(200, dtos.SuccessDataMsgResponse(alert))
 }

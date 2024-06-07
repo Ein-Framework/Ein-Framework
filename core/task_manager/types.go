@@ -27,4 +27,5 @@ type ITaskManager interface {
 	ViewTaskStatus(taskID uint) (*entity.TaskState, error)
 
 	GetRunningJobs() ([]*entity.JobExecution, error)
+	GetAllJobs() ([]*entity.JobExecution, error)
 }

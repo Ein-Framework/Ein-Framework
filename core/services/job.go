@@ -26,7 +26,7 @@ func NewJobService(ctx Context) *JobService {
 	}
 }
 
-func (s *JobService) AddNewJob(name string, templates []entity.Template) (*entity.Job, error) {
+func (s *JobService) AddNewJob(name string, description string, templates []entity.Template) (*entity.Job, error) {
 	if name == "" {
 		return nil, fmt.Errorf("invalid input: name is required")
 	}
@@ -39,8 +39,9 @@ func (s *JobService) AddNewJob(name string, templates []entity.Template) (*entit
 	}
 
 	job := &entity.Job{
-		Name:      name,
-		Templates: templatesData,
+		Name:        name,
+		Description: description,
+		Templates:   templatesData,
 	}
 
 	if err := s.repo.Create(job); err != nil {
@@ -113,6 +114,7 @@ func (s *JobService) UpdateJob(id uint, updatedJob *entity.Job) error {
 	}
 
 	job.Name = updatedJob.Name
+	job.Description = updatedJob.Description
 	job.Templates = updatedJob.Templates
 
 	if err := s.repo.Save(job); err != nil {

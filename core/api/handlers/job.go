@@ -60,7 +60,7 @@ func (h *JobHandler) CreateJob(c echo.Context) error {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
-	job, err := h.jobService.AddNewJob(req.Name, req.Templates)
+	job, err := h.jobService.AddNewJob(req.Name, req.Description, req.Templates)
 	if err != nil {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
@@ -80,7 +80,8 @@ func (h *JobHandler) UpdateJob(c echo.Context) error {
 	}
 
 	err = h.jobService.UpdateJob(id, &entity.Job{
-		Name: req.Name,
+		Name:        req.Name,
+		Description: req.Description,
 	})
 	if err != nil {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))

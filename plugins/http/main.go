@@ -60,7 +60,27 @@ func (p *HttpProtocol) Execute(body map[string]interface{}, others ...interface{
 
 	p.alerts = append(p.alerts, entity.Alert{
 		Title:       "File Disclosure Found",
-		Description: ".env found",
+		Description: ".env found at http://demo.ein.com",
+	})
+
+	p.alerts = append(p.alerts, entity.Alert{
+		Title:       "File Disclosure Found",
+		Description: ".env.development found at http://demo.ein.com",
+	})
+
+	p.alerts = append(p.alerts, entity.Alert{
+		Title:       "File Disclosure Found",
+		Description: "package.json found at http://demo.ein.com",
+	})
+
+	p.alerts = append(p.alerts, entity.Alert{
+		Title:       "File Disclosure Found",
+		Description: "package-lock.json found at http://demo.ein.com",
+	})
+
+	p.alerts = append(p.alerts, entity.Alert{
+		Title:       "File Disclosure Found",
+		Description: ".git/HEAD found at http://demo.ein.com",
 	})
 
 	return entity.TaskExecutionResultType{

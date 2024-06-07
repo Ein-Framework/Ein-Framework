@@ -41,7 +41,7 @@ func (h *AssessmentHandler) ListAssesments(c echo.Context) error {
 		return c.JSON(500, dtos.ErrorResponseMsg(err.Error()))
 	}
 
-	return c.JSON(200, assessments)
+	return c.JSON(200, dtos.SuccessDataMsgResponse(assessments))
 }
 
 func (h *AssessmentHandler) GetAssessmentById(c echo.Context) error {

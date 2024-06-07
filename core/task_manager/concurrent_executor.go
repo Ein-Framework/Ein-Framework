@@ -34,6 +34,9 @@ func (manager *TaskManager) execute(exec *ConcurrentExecution) {
 
 			for _, res := range results {
 				fmt.Println(res.Alerts)
+				for _, alrt := range res.Alerts {
+					alrt.Scope = asset.Value
+				}
 				manager.coreServices.AlertService.AddNewAlerts(res.Alerts...)
 			}
 			// resultsMap[task.Template] = results

@@ -22,8 +22,9 @@ func New(coreServices *services.Services, components *AppComponents, config *con
 	e := echo.New()
 
 	// Middleware
-
-	e.Use(middleware.CORS())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+	}))
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 

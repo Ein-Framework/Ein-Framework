@@ -77,7 +77,7 @@ type ITaskService interface {
 }
 
 type IJobService interface {
-	AddNewJob(name string, templates []entity.Template) (*entity.Job, error)
+	AddNewJob(name string, description string, templates []entity.Template) (*entity.Job, error)
 	DeleteJob(id uint) error
 	UpdateJob(id uint, updatedJob *entity.Job) error
 	GetJobById(id uint) (*entity.Job, error)

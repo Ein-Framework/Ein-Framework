@@ -51,8 +51,11 @@ const (
 )
 
 type TemplateMeta struct {
-	Author string       `yaml:"author"`
-	Type   TemplateType `yaml:"type"`
+	Author      string       `json:"author" yaml:"author"`
+	Remediation string       `json:"remediation" yaml:"remediation"`
+	Description string       `json:"description" yaml:"description"`
+	Type        TemplateType `json:"type" yaml:"type"`
+	Severity    string       `json:"severity" yaml:"severity"`
 }
 
 type TemplateStep struct {

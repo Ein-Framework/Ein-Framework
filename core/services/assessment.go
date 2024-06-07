@@ -34,7 +34,7 @@ func NewAssessmentService(ctx Context) *AssessmentService {
 func (s *AssessmentService) GetAllAssessments() (*[]entity.Assessment, error) {
 	var assessments []entity.Assessment
 
-	err := s.repo.GetAll(&assessments, "Scope.InScope", "Scope.OutScope")
+	err := s.repo.GetAll(&assessments, "Assets", "Stage", "Scope.InScope", "Scope.OutScope")
 	if err != nil {
 		return nil, err
 	}

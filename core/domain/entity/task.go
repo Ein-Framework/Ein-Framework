@@ -40,8 +40,10 @@ const (
 type Job struct {
 	gorm.Model
 	// Type JobType `gorm:"type:text"`
-	Name      string         `json:"name" gorm:"type:text"`
-	Templates []TemplateData `json:"templates" gorm:"many2many:job_templates;"`
+	Name          string         `json:"name" gorm:"type:text"`
+	Description   string         `json:"description" gorm:"type:text"`
+	Templates     []TemplateData `json:"templates" gorm:"many2many:job_templates;"`
+	JobExecutions []JobExecution `json:"jobExecutions" gorm:"foreignKey:JobID"`
 }
 
 type TemplateData struct {
@@ -53,7 +55,7 @@ type TemplateData struct {
 
 type JobExecution struct {
 	gorm.Model
-	Job          Job        `json:"periodConfiguration" gorm:"foreignkey:JobID;association_foreignkey:ID;"`
+	Job          Job
 	JobID        uint       `json:"-"`
 	Assessment   Assessment `json:"assessment" gorm:"foreignkey:AssessmentId;association_foreignkey:ID;"`
 	AssessmentId uint       `json:"-"`
